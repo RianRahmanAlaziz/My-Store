@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Heart, ShoppingCart, Star } from "lucide-react";
 import { Product } from "@/data/products";
 import { Button } from "@/components/ui/Button";
+import { Badge } from "@/components/ui/Badge";
 
 type ProductCardProps = {
     product: Product;
@@ -16,7 +17,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
     return (
         <div className="group overflow-hidden rounded-3xl border border-[var(--border)] bg-[var(--card)] shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl">
-            <Link href={`/product/${product.id}`} className="block">
+            <Link href={`/product/${product.slug}`} className="block">
                 <div className="relative aspect-square overflow-hidden bg-[var(--secondary)]">
                     <img
                         src={product.image}
@@ -25,17 +26,8 @@ export function ProductCard({ product }: ProductCardProps) {
                     />
 
                     <div className="absolute left-3 top-3 flex flex-col gap-2">
-                        {product.isNew && (
-                            <span className="rounded-full bg-[var(--primary)] px-3 py-1 text-xs font-bold text-[var(--primary-foreground)]">
-                                NEW
-                            </span>
-                        )}
-
-                        {discount > 0 && (
-                            <span className="rounded-full bg-[var(--accent)] px-3 py-1 text-xs font-bold text-[var(--accent-foreground)]">
-                                -{discount}%
-                            </span>
-                        )}
+                        {product.isNew && <Badge variant="accent">NEW</Badge>}
+                        {discount > 0 && <Badge variant="destructive">-{discount}%</Badge>}
                     </div>
 
                     <button className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-[var(--card)]/80 text-[var(--foreground)] opacity-0 backdrop-blur transition group-hover:opacity-100">

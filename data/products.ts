@@ -1,5 +1,6 @@
 export interface Product {
     id: string;
+    slug: string;
     name: string;
     brand: string;
     price: number;
@@ -21,6 +22,7 @@ export interface Product {
 export const products: Product[] = [
     {
         id: "1",
+        slug: "nike-air-max-270",
         name: "Air Max Premium",
         brand: "Nike",
         price: 1899000,
@@ -48,6 +50,7 @@ export const products: Product[] = [
     },
     {
         id: "2",
+        slug: "ultraboost-22",
         name: "UltraBoost 22",
         brand: "Adidas",
         price: 2199000,
@@ -73,6 +76,7 @@ export const products: Product[] = [
     },
     {
         id: "3",
+        slug: "air-jordan-retro",
         name: "Air Jordan Retro",
         brand: "Nike",
         price: 2599000,
@@ -97,6 +101,7 @@ export const products: Product[] = [
     },
     {
         id: "4",
+        slug: "casual-walker",
         name: "Casual Walker",
         brand: "Puma",
         price: 1299000,
@@ -121,6 +126,7 @@ export const products: Product[] = [
     },
     {
         id: "5",
+        slug: "running-pro-elite",
         name: "Running Pro Elite",
         brand: "Nike",
         price: 1699000,
@@ -144,6 +150,7 @@ export const products: Product[] = [
     },
     {
         id: "6",
+        slug: "classic-low",
         name: "Classic Low",
         brand: "Adidas",
         price: 999000,
@@ -167,6 +174,7 @@ export const products: Product[] = [
     },
     {
         id: "7",
+        slug: "sport-runner-x",
         name: "Sport Runner X",
         brand: "Puma",
         price: 1499000,
@@ -190,6 +198,7 @@ export const products: Product[] = [
     },
     {
         id: "8",
+        slug: "street-collection",
         name: "Street Collection",
         brand: "Nike",
         price: 1799000,

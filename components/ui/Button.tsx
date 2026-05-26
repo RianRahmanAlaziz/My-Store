@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-    variant?: "primary" | "secondary" | "ghost" | "outline";
+    variant?: "primary" | "secondary" | "ghost" | "outline" | "accent";
     size?: "sm" | "md" | "lg" | "icon";
 };
 
@@ -21,6 +21,7 @@ export function Button({
             "bg-transparent text-[var(--foreground)] hover:bg-[var(--secondary)]",
         outline:
             "border border-[var(--border)] bg-transparent text-[var(--foreground)] hover:bg-[var(--secondary)]",
+        accent: "bg-accent text-accent-foreground hover:bg-accent/90 active:scale-95",
     };
 
     const sizes = {
@@ -33,7 +34,7 @@ export function Button({
     return (
         <button
             className={cn(
-                "inline-flex items-center justify-center gap-2 rounded-full font-semibold transition",
+                "inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition",
                 variants[variant],
                 sizes[size],
                 className

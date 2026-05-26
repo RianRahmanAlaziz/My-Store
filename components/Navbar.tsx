@@ -44,15 +44,7 @@ export default function Navbar() {
                     ))}
                 </div>
 
-                <div className="hidden w-full max-w-sm items-center rounded-full bg-[var(--secondary)] px-4 lg:flex">
-                    <Search className="h-5 w-5 text-[var(--muted-foreground)]" />
 
-                    <input
-                        type="search"
-                        placeholder="Search modern shoes..."
-                        className="h-11 flex-1 bg-transparent px-3 text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--muted-foreground)]"
-                    />
-                </div>
 
                 <div className="flex items-center gap-2">
                     <Button

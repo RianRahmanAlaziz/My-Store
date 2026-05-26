@@ -107,6 +107,12 @@ export default function HomePage() {
       </section>
 
       <ProductSection
+        title="Best Sellers"
+        subtitle="Produk favorit pilihan customer"
+        products={bestSellers}
+      />
+
+      <ProductSection
         title="Trending Now"
         subtitle="Sepatu paling populer minggu ini"
         products={trendingProducts}
@@ -119,35 +125,6 @@ export default function HomePage() {
         variant="soft"
       />
 
-      <ProductSection
-        title="Best Sellers"
-        subtitle="Produk favorit pilihan customer"
-        products={bestSellers}
-      />
-
-      <section className="mx-auto max-w-7xl px-4 py-20 lg:px-8">
-        <div className="rounded-[2rem] bg-[var(--primary)] px-6 py-14 text-center text-[var(--primary-foreground)] md:px-12">
-          <h2 className="text-3xl font-black md:text-5xl">
-            Join StepHub Community
-          </h2>
-
-          <p className="mx-auto mt-4 max-w-2xl text-slate-300">
-            Dapatkan promo, diskon, dan info sepatu terbaru langsung ke email.
-          </p>
-
-          <div className="mx-auto mt-8 flex max-w-xl flex-col gap-3 sm:flex-row">
-            <input
-              type="email"
-              placeholder="Masukkan email kamu"
-              className="h-14 flex-1 rounded-full px-6 text-slate-950 outline-none"
-            />
-
-            <button className="h-14 rounded-full bg-orange-500 px-8 font-semibold text-white transition hover:bg-orange-600">
-              Subscribe
-            </button>
-          </div>
-        </div>
-      </section>
     </main>
   );
 }
