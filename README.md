@@ -1,36 +1,263 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 👟 Modern Shoes E-Commerce
 
-## Getting Started
+A modern, responsive, and scalable e-commerce application for selling shoes built with **Next.js**, **TypeScript**, and **Tailwind CSS**.
 
-First, run the development server:
+---
+
+## 📖 Overview
+
+Modern Shoes E-Commerce is a web application designed to provide a seamless online shopping experience for footwear products. The platform allows customers to browse products, search items, view detailed product information, manage shopping carts, and complete purchases efficiently.
+
+The project follows a modern UI/UX approach inspired by premium brands such as Nike, Adidas, and New Balance, focusing on performance, responsiveness, and scalability.
+
+---
+
+## 🎯 Objectives
+
+* Provide a modern and responsive shopping experience.
+* Simplify product discovery through search and filtering.
+* Improve customer engagement through reviews and ratings.
+* Deliver a scalable architecture for future integrations such as payment gateways, inventory systems, and CMS management.
+
+---
+
+## 🛠 Tech Stack
+
+### Frontend
+
+* Next.js 15+
+* TypeScript
+* Tailwind CSS v4
+* Lucide React Icons
+* Motion
+
+### State Management (Planned)
+
+* Zustand
+
+### Backend (Planned)
+
+* Laravel 12
+* REST API
+* MySQL
+
+---
+
+# ✨ Features
+
+## Customer Features
+
+### 🏠 Home Page
+
+* Hero Banner
+* Featured Products
+* Trending Products
+* Best Seller Products
+* Promotional Sections
+* Newsletter Subscription
+
+### 📦 Product Catalog
+
+* Product Listing
+* Category Filter
+* Brand Filter
+* Product Sorting
+* Responsive Grid Layout
+* Modern Search Experience
+
+### 🔍 Product Detail
+
+* Product Images Gallery
+* Product Information
+* Brand & Category Badge
+* Rating & Reviews
+* Size Selection
+* Color Selection
+* Quantity Selector
+* Related Products
+* Add to Cart
+* Buy Now
+
+### 🛒 Shopping Cart
+
+* View Cart Items
+* Update Quantity
+* Remove Product
+* Order Summary
+* Shipping Information
+* Checkout Button
+
+### ⭐ Review & Rating
+
+* Customer Reviews
+* Rating Summary
+* Verified Purchase Badge
+
+### 👤 User Account (Planned)
+
+* Register
+* Login
+* Profile Management
+* Order History
+* Wishlist
+
+---
+
+## Admin Features (Planned)
+
+### Product Management
+
+* Create Product
+* Update Product
+* Delete Product
+* Manage Categories
+* Manage Brands
+* Manage Product Images
+* Manage Product Variants
+
+### Order Management
+
+* View Orders
+* Update Order Status
+* Process Orders
+* Shipping Management
+
+### Customer Management
+
+* Customer List
+* Customer Detail
+* Order Tracking
+* Customer Activity Monitoring
+
+---
+
+# 📂 Project Structure
+
+```bash
+src/
+├── app/
+│   ├── page.tsx
+│   ├── catalog/
+│   ├── cart/
+│   ├── checkout/
+│   └── product/
+│       └── [slug]/
+│
+├── components/
+│   ├── Navbar.tsx
+│   ├── Footer.tsx
+│   ├── ProductCard.tsx
+│   └── ui/
+│       ├── Button.tsx
+│       └── Badge.tsx
+│
+├── data/
+│   └── products.ts
+│
+├── lib/
+│   └── utils.ts
+│
+└── app/globals.css
+```
+
+---
+
+# 🎨 Design System
+
+The project uses centralized CSS Variables for easy theme management.
+
+Example:
+
+```css
+:root {
+  --background: #f5f5f5;
+  --foreground: #111111;
+
+  --accent: #ff6b00;
+  --accent-foreground: #ffffff;
+
+  --success: #16a34a;
+  --destructive: #dc2626;
+}
+```
+
+Benefits:
+
+* Easy theme customization
+* CMS-friendly color management
+* Consistent UI across all pages
+
+---
+
+# 🚀 Getting Started
+
+## Install Dependencies
+
+```bash
+npm install
+```
+
+## Run Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Build Production
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Start Production Server
 
-## Learn More
+```bash
+npm start
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# 🗺 Development Roadmap
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Phase 1 – Frontend
 
-## Deploy on Vercel
+* [x] Home Page
+* [x] Catalog Page
+* [x] Product Detail Page
+* [x] Shopping Cart
+* [ ] Checkout Page
+* [ ] Authentication
+* [ ] Wishlist
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Phase 2 – State Management
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+* [ ] Zustand Cart Store
+* [ ] Persistent Cart
+* [ ] User Session
+
+## Phase 3 – Backend
+
+* [ ] Laravel API
+* [ ] Product CRUD
+* [ ] Category CRUD
+* [ ] Brand CRUD
+* [ ] Order Management
+* [ ] Customer Management
+
+## Phase 4 – Production
+
+* [ ] Payment Gateway
+* [ ] Email Notifications
+* [ ] SEO Optimization
+* [ ] Analytics
+* [ ] CMS Integration
+
+---
+
+# 👨‍💻 Author
+
+**Rian Rahman Al Aziz**
+
+Frontend & Backend Developer
+
+Built with ❤️ using Next.js and Laravel.

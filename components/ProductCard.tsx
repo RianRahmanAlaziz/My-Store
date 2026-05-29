@@ -1,8 +1,10 @@
+'use client';
 import Link from "next/link";
 import { Heart, ShoppingCart, Star } from "lucide-react";
 import { Product } from "@/data/products";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
+import { motion } from "motion/react";
 
 type ProductCardProps = {
     product: Product;
@@ -16,7 +18,11 @@ export function ProductCard({ product }: ProductCardProps) {
         : 0;
 
     return (
-        <div className="group overflow-hidden rounded-3xl border border-[var(--border)] bg-[var(--card)] shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl">
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="group overflow-hidden rounded-3xl border border-[var(--border)] bg-[var(--card)] shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl">
             <Link href={`/product/${product.slug}`} className="block">
                 <div className="relative aspect-square overflow-hidden bg-[var(--secondary)]">
                     <img
@@ -69,11 +75,14 @@ export function ProductCard({ product }: ProductCardProps) {
             </Link>
 
             <div className="px-4 pb-4">
-                <Button className="w-full">
+                <Button
+                    variant="primary"
+                    size="md"
+                    className="w-full opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                     <ShoppingCart className="h-4 w-4" />
                     Add to Cart
                 </Button>
             </div>
-        </div>
+        </motion.div>
     );
 }
