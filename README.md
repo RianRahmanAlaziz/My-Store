@@ -37,9 +37,12 @@ The project follows a modern UI/UX approach inspired by premium brands such as N
 
 ### Backend (Planned)
 
-* Laravel 12
-* REST API
+* Laravel 13
+* PHP 8.3+
 * MySQL
+* Laravel Sanctum
+* REST API
+* Eloquent ORM
 
 ---
 
@@ -237,10 +240,10 @@ npm start
 
 ## Phase 3 – Backend
 
-* [ ] Laravel API
-* [ ] Product CRUD
-* [ ] Category CRUD
-* [ ] Brand CRUD
+* [x] Laravel API
+* [x] Product CRUD
+* [x] Category CRUD
+* [x] Brand CRUD
 * [ ] Order Management
 * [ ] Customer Management
 
