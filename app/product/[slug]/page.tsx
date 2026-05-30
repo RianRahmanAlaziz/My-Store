@@ -2,8 +2,8 @@ import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { products } from "@/data/products";
 import { Button } from "@/components/ui/Button";
-import { ProductCard } from "@/components/ProductCard";
-import ProductDetailClient from "./ProductDetailClient";
+import { ProductCard } from "@/features/product/components/ProductCard";
+import ProductDetailClient from "../../../features/product/components/ProductDetailClient";
 
 type ProductDetailPageProps = {
     params: Promise<{

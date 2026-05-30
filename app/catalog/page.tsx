@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { Filter, Search, SlidersHorizontal, X } from "lucide-react";
-import { ProductCard } from "@/components/ProductCard";
+import { ProductCard } from "@/features/product/components/ProductCard";
 import { Button } from "@/components/ui/Button";
 import { products } from "@/data/products";
 import Select from "react-select";

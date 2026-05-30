@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, Award, ShieldCheck, Sparkles, Truck } from "lucide-react";
-import { ProductCard } from "@/components/ProductCard";
+import { ProductCard } from "@/features/product/components/ProductCard";
 import { Button } from "@/components/ui/Button";
 import { products, Product } from "@/data/products";
 

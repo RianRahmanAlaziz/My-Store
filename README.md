@@ -145,6 +145,8 @@ src/
 │   ├── checkout/
 │   └── product/
 │       └── [slug]/
+│           ├── page.tsx
+│           └── ProductDetailClient.tsx
 │
 ├── components/
 │   ├── Navbar.tsx
@@ -162,33 +164,6 @@ src/
 │
 └── app/globals.css
 ```
-
----
-
-# 🎨 Design System
-
-The project uses centralized CSS Variables for easy theme management.
-
-Example:
-
-```css
-:root {
-  --background: #f5f5f5;
-  --foreground: #111111;
-
-  --accent: #ff6b00;
-  --accent-foreground: #ffffff;
-
-  --success: #16a34a;
-  --destructive: #dc2626;
-}
-```
-
-Benefits:
-
-* Easy theme customization
-* CMS-friendly color management
-* Consistent UI across all pages
 
 ---
 
