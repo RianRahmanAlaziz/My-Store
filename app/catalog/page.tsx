@@ -60,33 +60,13 @@ export default function CatalogPage() {
 
     return (
         <main className="bg-[var(--background)]">
-            <section className="border-b border-[var(--border)] bg-[var(--card)]">
-                <div className="mx-auto max-w-7xl px-4 py-12 lg:px-8">
-                    <p className="text-sm font-semibold text-[var(--accent)]">
-                        StepHub Catalog
+            <section className="bg-gradient-to-r from-[var(--primary)] to-[var(--primary)]/90 py-12 text-[var(--primary-foreground)]">
+                <div className="mx-auto max-w-7xl px-4 lg:px-8">
+                    <h1 className="text-4xl font-black md:text-5xl">All Shoes</h1>
+                    <p className="mt-4 text-lg text-white/80">
+                        Cari sepatu favorit kamu berdasarkan kategori, harga, rating,
+                        dan koleksi terbaru.
                     </p>
-
-                    <div className="mt-3 flex flex-col justify-between gap-5 lg:flex-row lg:items-end">
-                        <div>
-                            <h1 className="text-4xl font-black text-[var(--foreground)] md:text-5xl">
-                                Explore Modern Shoes
-                            </h1>
-
-                            <p className="mt-3 max-w-2xl text-[var(--muted)]">
-                                Cari sepatu favorit kamu berdasarkan kategori, harga, rating,
-                                dan koleksi terbaru.
-                            </p>
-                        </div>
-
-                        <Button
-                            variant="outline"
-                            className="lg:hidden"
-                            onClick={() => setOpenFilter(true)}
-                        >
-                            <SlidersHorizontal className="h-5 w-5" />
-                            Filter
-                        </Button>
-                    </div>
                 </div>
             </section>
 

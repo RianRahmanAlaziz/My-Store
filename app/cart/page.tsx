@@ -106,26 +106,25 @@ export default function CartPage() {
 
     return (
         <main className="bg-[var(--background)]">
-            <section className="border-b border-[var(--border)] bg-[var(--card)]">
-                <div className="mx-auto max-w-7xl px-4 py-12 lg:px-8">
-                    <p className="text-sm font-semibold text-[var(--accent)]">
-                        Shopping Cart
+            <section className="bg-gradient-to-r from-[var(--primary)] to-[var(--primary)]/90 py-12 text-[var(--primary-foreground)]">
+                <div className="mx-auto max-w-7xl px-4 lg:px-8">
+                    <h1 className="text-4xl font-black md:text-5xl">Your Shopping Cart</h1>
+                    <p className="mt-4 text-lg text-white/80">
+                        Produk sepatu yang kamu tambahkan ke keranjang.
                     </p>
-                    <h1 className="mt-3 text-4xl font-black text-[var(--foreground)] md:text-5xl">
-                        Your Cart
-                    </h1>
-                    <p className="mt-3 text-[var(--muted)]">
+                    <p className="mt-3 text-white/80">
                         {cartItems.length} {cartItems.length === 1 ? "item" : "items"} in your cart
                     </p>
                 </div>
             </section>
+
 
             <section className="mx-auto grid max-w-7xl gap-8 px-4 py-10 lg:grid-cols-[1fr_380px] lg:px-8">
                 <div className="space-y-5">
                     {cartItems.map((item) => (
                         <div
                             key={item.id}
-                            className="rounded-3xl border border-[var(--border)] bg-[var(--card)] p-4 md:p-5"
+                            className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4 md:p-5"
                         >
                             <div className="flex gap-4">
                                 <Link
@@ -207,7 +206,7 @@ export default function CartPage() {
                     ))}
                 </div>
 
-                <aside className="h-fit rounded-3xl border border-[var(--border)] bg-[var(--card)] p-6 lg:sticky lg:top-28">
+                <aside className="h-fit rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6 lg:sticky lg:top-28">
                     <h2 className="text-xl font-black text-[var(--foreground)]">
                         Order Summary
                     </h2>

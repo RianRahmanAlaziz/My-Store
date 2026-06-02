@@ -92,7 +92,7 @@ export default function HomePage() {
         ].map((item) => (
           <div
             key={item.title}
-            className="rounded-3xl border border-[var(--border)] bg-[var(--card)] p-6 shadow-sm"
+            className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6 shadow-lg hover:shadow-xl transition-shadow"
           >
             <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--secondary)] text-[var(--accent)]">
               <item.icon className="h-6 w-6" />

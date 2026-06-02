@@ -42,17 +42,10 @@ export default function WishlistPage() {
 
     return (
         <main className="bg-[var(--background)]">
-            <section className="border-b border-[var(--border)] bg-[var(--card)]">
-                <div className="mx-auto max-w-7xl px-4 py-12 lg:px-8">
-                    <p className="text-sm font-semibold text-[var(--accent)]">
-                        Favorite Products
-                    </p>
-
-                    <h1 className="mt-3 text-4xl font-black text-[var(--foreground)] md:text-5xl">
-                        My Wishlist
-                    </h1>
-
-                    <p className="mt-3 text-[var(--muted)]">
+            <section className="bg-gradient-to-r from-[var(--primary)] to-[var(--primary)]/90 py-12 text-[var(--primary-foreground)]">
+                <div className="mx-auto max-w-7xl px-4 lg:px-8">
+                    <h1 className="text-4xl font-black md:text-5xl">Favorite Products</h1>
+                    <p className="mt-4 text-lg text-white/80">
                         Produk sepatu favorit kamu tersimpan di sini.
                     </p>
                 </div>
