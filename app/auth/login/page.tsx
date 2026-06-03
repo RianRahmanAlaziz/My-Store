@@ -7,6 +7,7 @@ import { Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/Button";
 import { login } from "@/features/auth/services/authService";
+import { toast } from "react-toastify";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -15,13 +16,11 @@ export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         setLoading(true);
-        setErrorMessage("");
 
         try {
             const response = await login({
@@ -35,14 +34,19 @@ export default function LoginPage() {
             localStorage.setItem("token", token);
             localStorage.setItem("user", JSON.stringify(user));
 
-            if (user.role === "admin") {
-                router.push("/admin");
-            } else {
-                router.push("/");
-            }
+            toast.success(`Selamat datang ${user.name}`);
+
+            setTimeout(() => {
+                if (user.role === "admin") {
+                    router.push("/admin");
+                } else {
+                    router.push("/");
+                }
+            }, 1000);
+
         } catch (error: any) {
-            setErrorMessage(
-                error?.response?.data?.message || "Login gagal. Silakan coba lagi."
+            toast.error(
+                "Login gagal. Silakan coba lagi."
             );
         } finally {
             setLoading(false);
@@ -139,12 +143,6 @@ export default function LoginPage() {
                             Welcome back! Please enter your details.
                         </p>
                     </div>
-
-                    {errorMessage && (
-                        <div className="mb-5 rounded-xl border border-[var(--destructive)] bg-[var(--destructive)]/10 px-4 py-3 text-sm text-[var(--destructive)]">
-                            {errorMessage}
-                        </div>
-                    )}
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <InputField

@@ -1,14 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Heart, LogIn, Menu, Search, ShoppingCart, User, X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/app/contexts/AuthContext";
+import { getCart } from "@/features/main/cart/services/cartService";
 
 export default function Navbar() {
     const [open, setOpen] = useState(false);
-    const cartCount = 3;
+    const [cartCount, setCartCount] = useState(0);
+
     const { user, loading } = useAuth();
 
     const menus = [
@@ -17,6 +19,27 @@ export default function Navbar() {
         { name: "Lifestyle", href: "/catalog?category=lifestyle" },
         { name: "Casual", href: "/catalog?category=casual" },
     ];
+
+    useEffect(() => {
+        const fetchCartCount = async () => {
+            if (!user) {
+                setCartCount(0);
+                return;
+            }
+
+            try {
+                const response = await getCart();
+
+                setCartCount(response.data?.summary?.total_items ?? 0);
+            } catch {
+                setCartCount(0);
+            }
+        };
+
+        if (!loading) {
+            fetchCartCount();
+        }
+    }, [user, loading]);
 
     return (
         <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--card)]/80 backdrop-blur-xl">
@@ -69,7 +92,7 @@ export default function Navbar() {
 
                                 {cartCount > 0 && (
                                     <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-[var(--accent)] text-xs font-bold text-[var(--accent-foreground)]">
-                                        {cartCount}
+                                        {cartCount > 99 ? "99+" : cartCount}
                                     </span>
                                 )}
                             </Link>
@@ -126,14 +149,53 @@ export default function Navbar() {
                             </Link>
                         ))}
 
-                        <Link
-                            href="/account"
-                            onClick={() => setOpen(false)}
-                            className="flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-medium text-[var(--muted)] transition hover:bg-[var(--secondary)] hover:text-[var(--accent)]"
-                        >
-                            <User className="h-5 w-5" />
-                            My Account
-                        </Link>
+                        {user ? (
+                            <>
+                                <Link
+                                    href="/wishlist"
+                                    onClick={() => setOpen(false)}
+                                    className="flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-medium text-[var(--muted)] transition hover:bg-[var(--secondary)] hover:text-[var(--accent)]"
+                                >
+                                    <Heart className="h-5 w-5" />
+                                    Wishlist
+                                </Link>
+
+                                <Link
+                                    href="/cart"
+                                    onClick={() => setOpen(false)}
+                                    className="flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium text-[var(--muted)] transition hover:bg-[var(--secondary)] hover:text-[var(--accent)]"
+                                >
+                                    <span className="flex items-center gap-2">
+                                        <ShoppingCart className="h-5 w-5" />
+                                        Cart
+                                    </span>
+
+                                    {cartCount > 0 && (
+                                        <span className="rounded-full bg-[var(--accent)] px-2 py-0.5 text-xs font-bold text-[var(--accent-foreground)]">
+                                            {cartCount > 99 ? "99+" : cartCount}
+                                        </span>
+                                    )}
+                                </Link>
+
+                                <Link
+                                    href="/account"
+                                    onClick={() => setOpen(false)}
+                                    className="flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-medium text-[var(--muted)] transition hover:bg-[var(--secondary)] hover:text-[var(--accent)]"
+                                >
+                                    <User className="h-5 w-5" />
+                                    My Account
+                                </Link>
+                            </>
+                        ) : (
+                            <Link
+                                href="/auth/login"
+                                onClick={() => setOpen(false)}
+                                className="flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-medium text-[var(--muted)] transition hover:bg-[var(--secondary)] hover:text-[var(--accent)]"
+                            >
+                                <LogIn className="h-5 w-5" />
+                                Login
+                            </Link>
+                        )}
                     </div>
                 </div>
             )}
