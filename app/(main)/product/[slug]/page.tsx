@@ -1,19 +1,19 @@
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 
-import ProductDetailClient from "@/features/product/components/ProductDetailClient";
-import { ProductNotFound } from "@/features/product/components/ProductNotFound";
-import { RelatedProducts } from "@/features/product/components/RelatedProducts";
+import ProductDetailClient from "@/features/main/product/components/ProductDetailClient";
+import { ProductNotFound } from "@/features/main/product/components/ProductNotFound";
+import { RelatedProducts } from "@/features/main/product/components/RelatedProducts";
 
 import {
     getProductDetail,
     getProducts,
-} from "@/features/product/services/productService";
+} from "@/features/main/product/services/productService";
 
 import {
     normalizeProductCard,
     normalizeProductDetail,
-} from "@/features/product/helpers/normalizeProduct";
+} from "@/features/main/product/helpers/normalizeProduct";
 
 type ProductDetailPageProps = {
     params: Promise<{

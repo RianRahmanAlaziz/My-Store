@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Heart, ShoppingCart, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { products } from "@/data/products";
-import { ProductCard } from "@/features/product/components/ProductCard";
+import { ProductCard } from "@/features/main/product/components/ProductCard";
 import { Button } from "@/components/ui/Button";
 
 export default function WishlistPage() {

@@ -6,8 +6,8 @@ import { Heart, ShoppingCart, Star, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { motion } from "motion/react";
-import { addWishlist } from "@/features/wishlist/services/wishlistService";
-import { addToCart } from "@/features/cart/services/cartService";
+import { addWishlist } from "@/features/main/wishlist/services/wishlistService";
+import { addToCart } from "@/features/main/cart/services/cartService";
 
 export type ProductCardItem = {
     id: number;

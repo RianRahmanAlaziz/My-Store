@@ -1,14 +1,33 @@
 import Link from "next/link";
 import { ArrowRight, Award, ShieldCheck, Sparkles, Truck } from "lucide-react";
-import { ProductCard } from "@/features/product/components/ProductCard";
+import { ProductCard } from "@/features/main/product/components/ProductCard";
+import type { ProductCardItem } from "@/features/main/product/components/ProductCard";
 import { Button } from "@/components/ui/Button";
-import { products, Product } from "@/data/products";
+import { getProducts } from "@/features/main/product/services/productService";
+import {
+  normalizeProductCard
+} from "@/features/main/product/helpers/normalizeProduct";
 
-export default function HomePage() {
-  const trendingProducts = products.filter((item) => item.isTrending).slice(0, 4);
-  const newProducts = products.filter((item) => item.isNew).slice(0, 4);
-  const bestSellers = products.filter((item) => item.isBestSeller).slice(0, 4);
+export default async function HomePage() {
 
+  const [bestSellerRes, trendingRes, newArrivalRes] = await Promise.all([
+    getProducts({
+      is_best_seller: true,
+      per_page: 4,
+    }),
+    getProducts({
+      is_trending: true,
+      per_page: 4,
+    }),
+    getProducts({
+      is_new: true,
+      per_page: 4,
+    }),
+  ]);
+
+  const bestSellers = bestSellerRes.data.map(normalizeProductCard);
+  const trendingProducts = trendingRes.data.map(normalizeProductCard);
+  const newProducts = newArrivalRes.data.map(normalizeProductCard);
   return (
     <main className="bg-[var(--background)]">
       <section className="relative overflow-hidden  bg-[var(--primary)]">
@@ -129,6 +148,8 @@ export default function HomePage() {
   );
 }
 
+
+
 function ProductSection({
   title,
   subtitle,
@@ -137,9 +158,11 @@ function ProductSection({
 }: {
   title: string;
   subtitle: string;
-  products: Product[];
+  products: ProductCardItem[];
   variant?: "soft";
 }) {
+  if (products.length === 0) return null;
+
   return (
     <section
       className={`mx-auto max-w-7xl px-4 py-20 lg:px-8 ${variant === "soft" ? "rounded-[2rem] bg-[var(--card)]" : ""
@@ -155,10 +178,7 @@ function ProductSection({
         </div>
 
         <Link href="/catalog">
-          <Button
-            variant="outline"
-            className="hidden sm:inline-flex"
-          >
+          <Button variant="outline" className="hidden sm:inline-flex">
             View All
             <ArrowRight className="h-4 w-4" />
           </Button>

@@ -4,23 +4,23 @@ import { useEffect, useState } from "react";
 import { SlidersHorizontal } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
-import { ProductCard } from "@/features/product/components/ProductCard";
+import { ProductCard } from "@/features/main/product/components/ProductCard";
 
-import { getProducts } from "@/features/product/services/productService";
-import { getCategories } from "@/features/category/services/categoryService";
-import { getBrands } from "@/features/brand/services/brandService";
+import { getProducts } from "@/features/main/product/services/productService";
+import { getCategories } from "@/features/main/category/services/categoryService";
+import { getBrands } from "@/features/main/brand/services/brandService";
 
-import { Option } from "@/features/catalog/types/catalog";
-import { normalizeProduct } from "@/features/catalog/helpers/normalizeProduct";
+import { Option } from "@/features/main/catalog/types/catalog";
+import { normalizeProduct } from "@/features/main/catalog/helpers/normalizeProduct";
 
 
-import { CatalogSearchSort } from "@/features/catalog/components/CatalogSearchSort";
-import { ActiveFilters } from "@/features/catalog/components/ActiveFilters";
-import { FilterPanel } from "@/features/catalog/components/FilterPanel";
-import { FilterDrawer } from "@/features/catalog/components/FilterDrawer";
-import { EmptyProduct } from "@/features/catalog/components/EmptyProduct";
-import { CatalogSkeleton } from "@/features/catalog/components/CatalogSkeleton";
-import { FilterSkeleton } from "@/features/catalog/components/FilterSkeleton";
+import { CatalogSearchSort } from "@/features/main/catalog/components/CatalogSearchSort";
+import { ActiveFilters } from "@/features/main/catalog/components/ActiveFilters";
+import { FilterPanel } from "@/features/main/catalog/components/FilterPanel";
+import { FilterDrawer } from "@/features/main/catalog/components/FilterDrawer";
+import { EmptyProduct } from "@/features/main/catalog/components/EmptyProduct";
+import { CatalogSkeleton } from "@/features/main/catalog/components/CatalogSkeleton";
+import { FilterSkeleton } from "@/features/main/catalog/components/FilterSkeleton";
 
 export default function CatalogPage() {
     const [products, setProducts] = useState<any[]>([]);

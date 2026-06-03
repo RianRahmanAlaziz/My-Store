@@ -12,6 +12,9 @@ export async function getProducts(params?: {
     brand?: string;
     sort?: string;
     per_page?: number;
+    is_trending?: boolean;
+    is_new?: boolean;
+    is_best_seller?: boolean;
 }) {
     const response = await axiosInstance.get("/products", {
         params,

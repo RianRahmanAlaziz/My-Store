@@ -2,12 +2,14 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Heart, Menu, Search, ShoppingCart, User, X } from "lucide-react";
+import { Heart, LogIn, Menu, Search, ShoppingCart, User, X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { useAuth } from "@/app/contexts/AuthContext";
 
 export default function Navbar() {
     const [open, setOpen] = useState(false);
     const cartCount = 3;
+    const { user, loading } = useAuth();
 
     const menus = [
         { name: "All Shoes", href: "/catalog" },
@@ -37,7 +39,7 @@ export default function Navbar() {
                         <Link
                             key={menu.name}
                             href={menu.href}
-                            className="text-sm font-medium text-[var(--muted)] transition hover:text-[var(--accent)]"
+                            className="text-sm font-medium text-[var(--foreground)] transition hover:text-[var(--accent)]"
                         >
                             {menu.name}
                         </Link>
@@ -47,34 +49,46 @@ export default function Navbar() {
 
 
                 <div className="flex items-center gap-2">
-                    <Link href="/wishlist">
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="hidden lg:inline-flex"
-                            aria-label="Wishlist"
-                        >
-                            <Heart className="h-5 w-5" />
-                        </Button>
-                    </Link>
+                    {!loading && user ? (
+                        <>
+                            <Link href="/wishlist">
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="hidden lg:inline-flex"
+                                    aria-label="Wishlist"
+                                >
+                                    <Heart className="h-5 w-5" />
+                                </Button>
+                            </Link>
 
-                    <Link href="/cart" className="relative">
-                        <Button variant="ghost" size="icon" aria-label="Cart">
-                            <ShoppingCart className="h-5 w-5" />
-                        </Button>
+                            <Link href="/cart" className="relative">
+                                <Button variant="ghost" size="icon" aria-label="Cart">
+                                    <ShoppingCart className="h-5 w-5" />
+                                </Button>
 
-                        {cartCount > 0 && (
-                            <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-[var(--accent)] text-xs font-bold text-[var(--accent-foreground)]">
-                                {cartCount}
-                            </span>
-                        )}
-                    </Link>
+                                {cartCount > 0 && (
+                                    <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-[var(--accent)] text-xs font-bold text-[var(--accent-foreground)]">
+                                        {cartCount}
+                                    </span>
+                                )}
+                            </Link>
 
-                    <Link href="/account" className="hidden lg:block">
-                        <Button variant="ghost" size="icon" aria-label="Account">
-                            <User className="h-5 w-5" />
-                        </Button>
-                    </Link>
+                            <Link href="/account" className="hidden lg:block">
+                                <Button variant="ghost" size="icon" aria-label="Account">
+                                    <User className="h-5 w-5" />
+                                </Button>
+                            </Link>
+                        </>
+                    ) : !loading ? (
+                        <Link href="/auth/login">
+                            <Button variant="ghost" size="icon" aria-label="logout">
+                                <LogIn className="h-5 w-5" />
+                            </Button>
+
+                        </Link>
+                    ) : null}
+
 
                     <Button
                         variant="ghost"

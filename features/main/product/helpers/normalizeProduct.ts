@@ -1,5 +1,5 @@
-import { ProductCardItem } from "@/features/product/components/ProductCard";
-import { ProductDetailItem } from "@/features/product/components/ProductDetailClient";
+import { ProductCardItem } from "@/features/main/product/components/ProductCard";
+import { ProductDetailItem } from "@/features/main/product/components/ProductDetailClient";
 
 export function normalizeProductDetail(product: any): ProductDetailItem {
     return {

@@ -1,4 +1,4 @@
-import { ProductCard, ProductCardItem } from "@/features/product/components/ProductCard";
+import { ProductCard, ProductCardItem } from "@/features/main/product/components/ProductCard";
 
 type RelatedProductsProps = {
     products: ProductCardItem[];
