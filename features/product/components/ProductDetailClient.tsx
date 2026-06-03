@@ -14,11 +14,34 @@ import {
 } from "lucide-react";
 import { motion } from "motion/react";
 
-import { Product } from "@/data/products";
+
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 
-export default function ProductDetailClient({ product }: { product: Product }) {
+export type ProductDetailItem = {
+    id: number;
+    slug: string;
+    name: string;
+    sku?: string;
+    brand: string;
+    category: string;
+    categorySlug: string;
+    image: string;
+    images: string[];
+    price: number;
+    originalPrice?: number | null;
+    description: string;
+    sizes: string[] | number[];
+    colors: string[];
+    rating: number;
+    reviews: number;
+    features?: string[];
+    isNew?: boolean;
+    isTrending?: boolean;
+    isBestSeller?: boolean;
+};
+
+export default function ProductDetailClient({ product }: { product: ProductDetailItem }) {
     const [selectedSize, setSelectedSize] = useState(product.sizes?.[0]);
     const [selectedColor, setSelectedColor] = useState(product.colors?.[0]);
     const [selectedImage, setSelectedImage] = useState(0);
