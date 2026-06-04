@@ -33,12 +33,14 @@ export default function HomePage() {
         title="Best Sellers"
         subtitle="Produk favorit pilihan customer"
         products={bestSellers}
+        variant="soft"
       />
 
       <ProductSection
         title="Trending Now"
         subtitle="Sepatu paling populer minggu ini"
         products={trendingProducts}
+        variant="soft"
       />
 
       <ProductSection

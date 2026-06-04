@@ -14,14 +14,54 @@ export function Button({
 }: ButtonProps) {
     const variants = {
         primary:
-            "bg-[var(--accent)] text-[var(--accent-foreground)] hover:opacity-90",
+            `
+        bg-[var(--accent)]
+        text-[var(--accent-foreground)]
+        shadow-md shadow-[var(--accent)]/20
+        hover:-translate-y-0.5
+        hover:shadow-xl
+        hover:shadow-[var(--accent)]/30
+        active:translate-y-0
+        active:scale-95
+        `,
         secondary:
-            "bg-[var(--secondary)] text-[var(--secondary-foreground)] hover:bg-[var(--border)]",
+            `
+        bg-[var(--secondary)]
+        text-[var(--secondary-foreground)]
+        shadow-sm
+        hover:bg-[var(--border)]
+        hover:shadow-md
+        active:scale-95
+        `,
         ghost:
-            "bg-transparent text-[var(--foreground)] hover:bg-[var(--secondary)]",
+            `
+        bg-transparent
+        text-[var(--foreground)]
+        hover:bg-[var(--secondary)]
+        hover:shadow-sm
+        active:scale-95
+        `,
         outline:
-            "border border-[var(--border)] bg-transparent text-[var(--foreground)] hover:bg-[var(--secondary)]",
-        accent: "bg-accent text-accent-foreground hover:bg-accent/90 active:scale-95",
+            `
+        border border-[var(--border)]
+        bg-transparent
+        text-[var(--foreground)]
+        shadow-sm
+        hover:bg-[var(--secondary)]
+        hover:shadow-md
+        active:scale-95
+        `,
+        accent:
+            `
+        bg-[var(--primary)]
+        text-[var(--primary-foreground)]
+        shadow-md shadow-[var(--primary)]/20
+        hover:-translate-y-0.5
+        hover:shadow-xl
+        hover:shadow-[var(--primary)]/30
+        active:translate-y-0
+        active:scale-95
+        `,
     };
 
     const sizes = {
@@ -34,7 +74,17 @@ export function Button({
     return (
         <button
             className={cn(
-                "inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition",
+                `inline-flex
+                items-center
+                justify-center
+                gap-2
+                rounded-xl
+                font-semibold
+                transition-all
+                duration-300
+                disabled:pointer-events-none
+                disabled:opacity-50
+                `,
                 variants[variant],
                 sizes[size],
                 className

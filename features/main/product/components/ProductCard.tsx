@@ -169,14 +169,14 @@ export function ProductCard({ product, topAction }: ProductCardProps) {
                 </div>
             </Link>
 
-            <div className="px-4 pb-4">
+            {/* <div className="px-4 pb-4">
                 <Button
                     type="button"
                     variant="primary"
                     size="md"
                     onClick={handleAddToCart}
                     disabled={cartLoading}
-                    className="w-full opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                    className="w-full opacity-0 translate-y-2 duration-300 group-hover:translate-y-0 group-hover:opacity-100"
                 >
                     {cartLoading ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
@@ -185,7 +185,7 @@ export function ProductCard({ product, topAction }: ProductCardProps) {
                     )}
                     Add to Cart
                 </Button>
-            </div>
+            </div> */}
         </motion.div>
     );
 }

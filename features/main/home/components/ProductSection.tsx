@@ -21,7 +21,7 @@ export function ProductSection({
 
     return (
         <section
-            className={`mx-auto max-w-7xl px-4 py-20 lg:px-8 ${variant === "soft" ? "rounded-[2rem] bg-[var(--card)]" : ""
+            className={`mx-auto max-w-7xl px-4 py-20 lg:px-8 ${variant === "soft" ? "mt-7 shadow-lg rounded-[1rem] border border-[var(--border)] bg-[var(--card)]" : ""
                 }`}
         >
             <div className="mb-8 flex items-end justify-between gap-4">
