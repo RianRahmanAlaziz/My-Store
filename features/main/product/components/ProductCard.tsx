@@ -34,7 +34,6 @@ type ProductCardProps = {
 
 export function ProductCard({ product, topAction }: ProductCardProps) {
     const [wishlistLoading, setWishlistLoading] = useState(false);
-    const [cartLoading, setCartLoading] = useState(false);
     const [isWishlisted, setIsWishlisted] = useState(product.isWishlisted ?? false);
 
     const discount = product.originalPrice
@@ -69,26 +68,6 @@ export function ProductCard({ product, topAction }: ProductCardProps) {
             setWishlistLoading(false);
         }
     };
-
-    const handleAddToCart = async () => {
-        try {
-            setCartLoading(true);
-
-            await addToCart({
-                product_id: product.id,
-                product_variant_id: null,
-                quantity: 1,
-            });
-
-            toast.success("Produk berhasil ditambahkan ke cart");
-        } catch (error: any) {
-            toast.error("Silakan login terlebih dahulu");
-        } finally {
-            setCartLoading(false);
-        }
-    };
-
-    console.log({ product })
 
     return (
         <motion.div

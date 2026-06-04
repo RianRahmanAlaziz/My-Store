@@ -22,6 +22,7 @@ export function normalizeProductDetail(product: any): ProductDetailItem {
         description: product.description ?? "-",
         sizes: product.sizes ?? [],
         colors: product.colors ?? [],
+        variants: product.variants ?? [],
         rating: product.rating ?? 0,
         reviews: product.reviews ?? 0,
         features: product.features ?? [],

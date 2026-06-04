@@ -11,12 +11,14 @@ import {
     ShoppingCart,
     Star,
     Truck,
+    Loader2,
 } from "lucide-react";
 import { motion } from "motion/react";
-
-
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
+import { toast } from "react-toastify";
+import { addToCart } from "@/features/main/cart/services/cartService";
+
 
 export type ProductDetailItem = {
     id: number;
@@ -33,6 +35,12 @@ export type ProductDetailItem = {
     description: string;
     sizes: string[] | number[];
     colors: string[];
+    variants: {
+        id: number;
+        size: string | number;
+        color: string;
+        stock: number;
+    }[];
     rating: number;
     reviews: number;
     features?: string[];
@@ -42,8 +50,9 @@ export type ProductDetailItem = {
 };
 
 export default function ProductDetailClient({ product }: { product: ProductDetailItem }) {
-    const [selectedSize, setSelectedSize] = useState(product.sizes?.[0]);
-    const [selectedColor, setSelectedColor] = useState(product.colors?.[0]);
+    const [cartLoading, setCartLoading] = useState(false);
+    const [selectedSize, setSelectedSize] = useState<string | number | null>(null);
+    const [selectedColor, setSelectedColor] = useState<string | null>(null);
     const [selectedImage, setSelectedImage] = useState(0);
     const [quantity, setQuantity] = useState(1);
 
@@ -84,6 +93,55 @@ export default function ProductDetailClient({ product }: { product: ProductDetai
             verified: true,
         },
     ];
+
+    const selectedVariant =
+        selectedSize && selectedColor
+            ? product.variants.find(
+                (variant) =>
+                    String(variant.size) === String(selectedSize) &&
+                    String(variant.color) === String(selectedColor)
+            )
+            : null;
+
+    const handleAddToCart = async () => {
+        try {
+            if (!selectedSize) {
+                toast.error("Pilih ukuran terlebih dahulu");
+                return;
+            }
+
+            if (!selectedColor) {
+                toast.error("Pilih warna terlebih dahulu");
+                return;
+            }
+
+            if (!selectedVariant) {
+                toast.error("Variant produk tidak tersedia");
+                return;
+            }
+
+            if (selectedVariant.stock < quantity) {
+                toast.error("Stock tidak mencukupi");
+                return;
+            }
+
+            setCartLoading(true);
+
+            await addToCart({
+                product_id: product.id,
+                product_variant_id: selectedVariant.id,
+                quantity,
+            });
+
+            toast.success("Produk berhasil ditambahkan ke cart");
+        } catch (error: any) {
+            toast.error(
+                error?.response?.data?.message ?? "Gagal menambahkan produk ke cart"
+            );
+        } finally {
+            setCartLoading(false);
+        }
+    };
 
     return (
         <div className="space-y-20">
@@ -208,7 +266,11 @@ export default function ProductDetailClient({ product }: { product: ProductDetai
                         <h3 className="mb-3 font-bold text-[var(--foreground)]">
                             Select Size
                         </h3>
-
+                        {!selectedSize && (
+                            <p className="mb-3 text-sm text-[var(--destructive)]">
+                                Please select a size
+                            </p>
+                        )}
                         <div className="flex flex-wrap gap-3">
                             {product.sizes?.map((size) => (
                                 <button
@@ -229,7 +291,11 @@ export default function ProductDetailClient({ product }: { product: ProductDetai
                         <h3 className="mb-3 font-bold text-[var(--foreground)]">
                             Select Color
                         </h3>
-
+                        {!selectedColor && (
+                            <p className="mb-3 text-sm text-[var(--destructive)]">
+                                Please select a color
+                            </p>
+                        )}
                         <div className="flex flex-wrap gap-3">
                             {product.colors?.map((color) => (
                                 <button
@@ -267,8 +333,15 @@ export default function ProductDetailClient({ product }: { product: ProductDetai
                             </button>
                         </div>
 
-                        <Button className="flex-1">
-                            <ShoppingCart className="h-5 w-5" />
+                        <Button
+                            onClick={handleAddToCart}
+                            disabled={cartLoading}
+                            className="flex-1">
+                            {cartLoading ? (
+                                <Loader2 className="h-5 w-5 animate-spin" />
+                            ) : (
+                                <ShoppingCart className="h-5 w-5" />
+                            )}
                             Add to Cart
                         </Button>
 
