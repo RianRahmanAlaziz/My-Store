@@ -6,8 +6,9 @@ import { Heart, ShoppingCart, Star, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { motion } from "motion/react";
-import { addWishlist } from "@/features/main/wishlist/services/wishlistService";
+import { addWishlist, removeWishlistByProduct } from "@/features/main/wishlist/services/wishlistService";
 import { addToCart } from "@/features/main/cart/services/cartService";
+import { toast } from "react-toastify";
 
 export type ProductCardItem = {
     id: number;
@@ -23,6 +24,7 @@ export type ProductCardItem = {
     isNew?: boolean;
     isTrending?: boolean;
     isBestSeller?: boolean;
+    isWishlisted?: boolean;
 };
 
 type ProductCardProps = {
@@ -33,7 +35,7 @@ type ProductCardProps = {
 export function ProductCard({ product, topAction }: ProductCardProps) {
     const [wishlistLoading, setWishlistLoading] = useState(false);
     const [cartLoading, setCartLoading] = useState(false);
-    const [isWishlisted, setIsWishlisted] = useState(false);
+    const [isWishlisted, setIsWishlisted] = useState(product.isWishlisted ?? false);
 
     const discount = product.originalPrice
         ? Math.round(
@@ -44,11 +46,25 @@ export function ProductCard({ product, topAction }: ProductCardProps) {
     const handleWishlist = async () => {
         try {
             setWishlistLoading(true);
-            await addWishlist(product.id);
-            setIsWishlisted(true);
-            alert("Produk berhasil ditambahkan ke wishlist");
+
+            if (isWishlisted) {
+                await removeWishlistByProduct(product.slug);
+
+                setIsWishlisted(false);
+
+                toast.success("Produk dihapus dari wishlist");
+            } else {
+                await addWishlist(product.id);
+
+                setIsWishlisted(true);
+
+                toast.success("Produk ditambahkan ke wishlist");
+            }
         } catch (error: any) {
-            alert(error?.response?.data?.message || "Silakan login terlebih dahulu");
+            toast.error(
+                error?.response?.data?.message ??
+                "Terjadi kesalahan"
+            );
         } finally {
             setWishlistLoading(false);
         }
@@ -64,14 +80,15 @@ export function ProductCard({ product, topAction }: ProductCardProps) {
                 quantity: 1,
             });
 
-            alert("Produk berhasil ditambahkan ke cart");
+            toast.success("Produk berhasil ditambahkan ke cart");
         } catch (error: any) {
-            alert(error?.response?.data?.message || "Silakan login terlebih dahulu");
+            toast.error("Silakan login terlebih dahulu");
         } finally {
             setCartLoading(false);
         }
     };
 
+    console.log({ product })
 
     return (
         <motion.div
@@ -107,7 +124,9 @@ export function ProductCard({ product, topAction }: ProductCardProps) {
                                 <Loader2 className="h-5 w-5 animate-spin" />
                             ) : (
                                 <Heart
-                                    className={`h-5 w-5 ${isWishlisted ? "fill-current" : ""
+                                    className={`h-5 w-5 transition ${isWishlisted
+                                        ? "fill-current text-red-500"
+                                        : ""
                                         }`}
                                 />
                             )}
@@ -155,6 +174,8 @@ export function ProductCard({ product, topAction }: ProductCardProps) {
                     type="button"
                     variant="primary"
                     size="md"
+                    onClick={handleAddToCart}
+                    disabled={cartLoading}
                     className="w-full opacity-0 transition-opacity duration-200 group-hover:opacity-100"
                 >
                     {cartLoading ? (

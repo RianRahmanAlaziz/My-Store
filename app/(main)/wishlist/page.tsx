@@ -1,20 +1,79 @@
 "use client";
 
 import Link from "next/link";
-import { Heart, ShoppingCart, Trash2 } from "lucide-react";
-import { useState } from "react";
-import { products } from "@/data/products";
+import { Heart, Loader2, ShoppingCart, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+
 import { ProductCard } from "@/features/main/product/components/ProductCard";
+import type { ProductCardItem } from "@/features/main/product/components/ProductCard";
 import { Button } from "@/components/ui/Button";
+import { getWishlist, removeWishlist } from "@/features/main/wishlist/services/wishlistService";
+import { normalizeProductCard } from "@/features/main/product/helpers/normalizeProduct";
+
+type WishlistItem = {
+    id: number;
+    product: ProductCardItem;
+};
+
 
 export default function WishlistPage() {
-    const [wishlistItems, setWishlistItems] = useState(
-        products.filter((product) => product.isTrending).slice(0, 4)
-    );
+    const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
+    const [loading, setLoading] = useState(true);
 
-    const removeWishlist = (id: number) => {
-        setWishlistItems((items) => items.filter((item) => item.id !== id));
+    const fetchWishlist = async () => {
+        try {
+            setLoading(true);
+
+            const response = await getWishlist();
+
+            const items = response.data.map((item: any) => ({
+                id: item.id,
+                product: normalizeProductCard(item.product),
+            }));
+
+            setWishlistItems(items);
+        } catch (error: any) {
+            toast.error(
+                "Gagal mengambil data wishlist"
+            );
+        } finally {
+            setLoading(false);
+        }
     };
+
+    const handleRemoveWishlist = async (wishlistId: number) => {
+        try {
+            await removeWishlist(wishlistId);
+
+            setWishlistItems((items) =>
+                items.filter((item) => item.id !== wishlistId)
+            );
+
+            toast.success("Produk berhasil dihapus dari wishlist");
+        } catch (error: any) {
+            toast.error(
+                "Gagal menghapus wishlist"
+            );
+        }
+    };
+
+    useEffect(() => {
+        fetchWishlist();
+    }, []);
+
+    if (loading) {
+        return (
+            <main className="bg-[var(--background)] px-4 py-20">
+                <div className="mx-auto flex max-w-2xl items-center justify-center rounded-3xl border border-[var(--border)] bg-[var(--card)] p-10">
+                    <Loader2 className="h-8 w-8 animate-spin text-[var(--accent)]" />
+                    <span className="ml-3 text-[var(--muted)]">
+                        Loading wishlist...
+                    </span>
+                </div>
+            </main>
+        );
+    }
 
     if (wishlistItems.length === 0) {
         return (
@@ -70,14 +129,15 @@ export default function WishlistPage() {
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                    {wishlistItems.map((product) => (
-                        <div key={product.id} className="relative">
+                    {wishlistItems.map((item) => (
+                        <div key={item.id} className="relative">
                             <ProductCard
-                                product={product}
+                                product={item.product}
                                 topAction={
                                     <button
-                                        onClick={() => removeWishlist(product.id)}
-                                        className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--card)]/80 text-[var(--destructive)] backdrop-blur transition hover:bg-[var(--destructive)] hover:text-[var(--accent-foreground)]"
+                                        type="button"
+                                        onClick={() => handleRemoveWishlist(item.id)}
+                                        className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--card)]/80 text-[var(--destructive)] backdrop-blur transition hover:bg-[var(--destructive)] hover:text-white"
                                     >
                                         <Trash2 className="h-5 w-5" />
                                     </button>

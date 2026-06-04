@@ -13,5 +13,6 @@ export function normalizeProduct(product: any) {
         isNew: product.is_new,
         isTrending: product.is_trending,
         isBestSeller: product.is_best_seller,
+        isWishlisted: product.is_wishlisted ?? false,
     };
 }

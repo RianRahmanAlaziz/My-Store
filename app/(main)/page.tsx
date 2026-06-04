@@ -1,129 +1,33 @@
-import Link from "next/link";
-import { ArrowRight, Award, ShieldCheck, Sparkles, Truck } from "lucide-react";
-import { ProductCard } from "@/features/main/product/components/ProductCard";
-import type { ProductCardItem } from "@/features/main/product/components/ProductCard";
-import { Button } from "@/components/ui/Button";
-import { getProducts } from "@/features/main/product/services/productService";
-import {
-  normalizeProductCard
-} from "@/features/main/product/helpers/normalizeProduct";
+"use client";
 
-export default async function HomePage() {
+import { useEffect, useState } from "react";
+import { HeroSection } from "@/features/main/home/components/HeroSection";
+import { BenefitSection } from "@/features/main/home/components/BenefitSection";
+import { ProductSection } from "@/features/main/home/components/ProductSection";
+import { getHomeProducts } from "@/features/main/home/services/homeService";
 
-  const [bestSellerRes, trendingRes, newArrivalRes] = await Promise.all([
-    getProducts({
-      is_best_seller: true,
-      per_page: 4,
-    }),
-    getProducts({
-      is_trending: true,
-      per_page: 4,
-    }),
-    getProducts({
-      is_new: true,
-      per_page: 4,
-    }),
-  ]);
+export default function HomePage() {
+  const [bestSellers, setBestSellers] = useState([]);
+  const [trendingProducts, setTrendingProducts] = useState([]);
+  const [newProducts, setNewProducts] = useState([]);
 
-  const bestSellers = bestSellerRes.data.map(normalizeProductCard);
-  const trendingProducts = trendingRes.data.map(normalizeProductCard);
-  const newProducts = newArrivalRes.data.map(normalizeProductCard);
+  useEffect(() => {
+    const fetchHomeProducts = async () => {
+      const data = await getHomeProducts();
+
+      setBestSellers(data.bestSellers);
+      setTrendingProducts(data.trendingProducts);
+      setNewProducts(data.newProducts);
+    };
+
+    fetchHomeProducts();
+  }, []);
+
   return (
     <main className="bg-[var(--background)]">
-      <section className="relative overflow-hidden  bg-[var(--primary)]">
-        <div className="absolute inset-0 opacity-30">
-          <img
-            src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1600"
-            alt="Hero Shoes"
-            className="h-full w-full object-cover"
-          />
-        </div>
+      <HeroSection />
 
-        <div className="relative mx-auto grid min-h-[620px] max-w-7xl items-center gap-10 px-4 py-20 lg:grid-cols-2 lg:px-8">
-          <div className="text-[var(--primary-foreground)]">
-            <p className="mb-4 inline-flex rounded-full bg-white/10 px-4 py-2 text-sm font-medium backdrop-blur">
-              New Collection 2026
-            </p>
-
-            <h1 className="max-w-2xl text-5xl font-black leading-tight md:text-7xl">
-              Step Into Your Modern Style
-            </h1>
-
-            <p className="mt-6 max-w-xl text-lg text-white/70">
-              Temukan sepatu modern untuk running, lifestyle, casual, dan daily
-              outfit dengan kualitas premium.
-            </p>
-
-            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-              <Link href="/catalog">
-                <Button size="lg">
-                  Shop Now
-                  <ArrowRight className="h-5 w-5" />
-                </Button>
-              </Link>
-
-              <Link href="/catalog?category=running">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-white/20 text-white hover:bg-white hover:text-black"
-                >
-                  Explore Running
-                </Button>
-              </Link>
-            </div>
-          </div>
-
-          <div className="hidden lg:block">
-            <div className="rounded-[3rem] border border-white/10 bg-white/10 p-6 backdrop-blur-xl">
-              <img
-                src="https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=900"
-                alt="Featured Shoes"
-                className="aspect-square rounded-[2.5rem] object-cover"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="mx-auto mt-12 grid max-w-7xl gap-5 px-4 md:grid-cols-4 lg:px-8">
-        {[
-          {
-            title: "Original Product",
-            desc: "Produk 100% authentic",
-            icon: ShieldCheck,
-          },
-          {
-            title: "Fast Delivery",
-            desc: "Pengiriman cepat & aman",
-            icon: Truck,
-          },
-          {
-            title: "Premium Quality",
-            desc: "Material nyaman dipakai",
-            icon: Sparkles,
-          },
-          {
-            title: "Best Brand",
-            desc: "Nike, Adidas, Puma",
-            icon: Award,
-          },
-        ].map((item) => (
-          <div
-            key={item.title}
-            className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6 shadow-lg hover:shadow-xl transition-shadow"
-          >
-            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--secondary)] text-[var(--accent)]">
-              <item.icon className="h-6 w-6" />
-            </div>
-
-            <h3 className="font-bold text-[var(--foreground)]">
-              {item.title}
-            </h3>
-            <p className="mt-1 text-sm text-[var(--muted)]">{item.desc}</p>
-          </div>
-        ))}
-      </section>
+      <BenefitSection />
 
       <ProductSection
         title="Best Sellers"
@@ -143,53 +47,6 @@ export default async function HomePage() {
         products={newProducts}
         variant="soft"
       />
-
     </main>
-  );
-}
-
-
-
-function ProductSection({
-  title,
-  subtitle,
-  products,
-  variant,
-}: {
-  title: string;
-  subtitle: string;
-  products: ProductCardItem[];
-  variant?: "soft";
-}) {
-  if (products.length === 0) return null;
-
-  return (
-    <section
-      className={`mx-auto max-w-7xl px-4 py-20 lg:px-8 ${variant === "soft" ? "rounded-[2rem] bg-[var(--card)]" : ""
-        }`}
-    >
-      <div className="mb-8 flex items-end justify-between gap-4">
-        <div>
-          <h2 className="text-3xl font-black text-[var(--foreground)] md:text-4xl">
-            {title}
-          </h2>
-
-          <p className="mt-2 text-[var(--muted)]">{subtitle}</p>
-        </div>
-
-        <Link href="/catalog">
-          <Button variant="outline" className="hidden sm:inline-flex">
-            View All
-            <ArrowRight className="h-4 w-4" />
-          </Button>
-        </Link>
-      </div>
-
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
-    </section>
   );
 }
