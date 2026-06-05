@@ -31,8 +31,8 @@ export function FilterDrawer({
     if (!open) return null;
 
     return (
-        <div className="fixed inset-0 z-[100] bg-black/40 lg:hidden">
-            <div className="ml-auto h-full w-[85%] max-w-sm bg-[var(--card)] p-5">
+        <div className="fixed  inset-0 z-[100] bg-black/40 lg:hidden">
+            <div className="ml-auto h-full w-[85%] max-w-sm bg-[var(--card)] p-5 ">
                 <div className="mb-6 flex items-center justify-between">
                     <h2 className="text-lg font-bold text-[var(--foreground)]">
                         Filter Products

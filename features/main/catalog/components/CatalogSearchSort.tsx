@@ -16,15 +16,15 @@ export function CatalogSearchSort({
     setSort,
 }: CatalogSearchSortProps) {
     return (
-        <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div className="flex h-12 flex-1 items-center rounded-xl border border-[var(--border)] bg-[var(--card)] px-4">
-                <Search className="h-5 w-5 text-[var(--muted-foreground)]" />
+        <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div className="flex h-12 w-full items-center rounded-xl border border-[var(--border)] bg-[var(--card)] px-4 shadow-sm md:max-w-md">
+                <Search className="h-5 w-5 shrink-0 text-[var(--muted-foreground)]" />
 
                 <input
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Search shoes..."
-                    className="h-full flex-1 bg-transparent px-3 text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--muted-foreground)]"
+                    className="h-full min-w-0 flex-1 bg-transparent pl-3 pr-2 text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--muted-foreground)]"
                 />
             </div>
 
@@ -33,18 +33,23 @@ export function CatalogSearchSort({
                 onChange={(selected) => setSort(selected?.value || "latest")}
                 options={sortOptions}
                 isSearchable={false}
-                className="min-w-[220px]"
+                className="w-full md:min-w-[220px] md:w-auto "
                 styles={{
-                    control: (base) => ({
+                    control: (base, state) => ({
                         ...base,
                         minHeight: "48px",
                         borderRadius: "0.75rem",
-                        borderColor: "var(--border)",
+                        borderColor: state.isFocused
+                            ? "var(--accent)"
+                            : "var(--border)",
                         backgroundColor: "var(--card)",
-                        boxShadow: "none",
+                        boxShadow: state.isFocused
+                            ? "0 0 0 3px rgb(59 130 246 / 0.1)"
+                            : "0 1px 2px 0 rgb(0 0 0 / 0.05)",
                         paddingLeft: "8px",
                         paddingRight: "8px",
                         cursor: "pointer",
+                        transition: "all 0.2s ease",
                         "&:hover": {
                             borderColor: "var(--border)",
                         },
@@ -61,6 +66,8 @@ export function CatalogSearchSort({
                         overflow: "hidden",
                         backgroundColor: "var(--card)",
                         border: "1px solid var(--border)",
+                        boxShadow:
+                            "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
                         zIndex: 50,
                     }),
                     option: (base, state) => ({

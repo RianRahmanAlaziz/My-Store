@@ -25,9 +25,13 @@ The project follows a modern UI/UX approach inspired by premium brands such as N
 
 ### Frontend
 
-* Next.js 15+
+* Next.js 16
+* React 19
 * TypeScript
 * Tailwind CSS v4
+* Axios
+* React Select
+* React Toastify
 * Lucide React Icons
 * Motion
 
@@ -50,16 +54,15 @@ The project follows a modern UI/UX approach inspired by premium brands such as N
 
 ## Customer Features
 
-### 🏠 Home Page
+### Home Page
 
 * Hero Banner
 * Featured Products
 * Trending Products
 * Best Seller Products
 * Promotional Sections
-* Newsletter Subscription
 
-### 📦 Product Catalog
+### Product Catalog
 
 * Product Listing
 * Category Filter
@@ -68,7 +71,7 @@ The project follows a modern UI/UX approach inspired by premium brands such as N
 * Responsive Grid Layout
 * Modern Search Experience
 
-### 🔍 Product Detail
+### Product Detail
 
 * Product Images Gallery
 * Product Information
@@ -78,31 +81,40 @@ The project follows a modern UI/UX approach inspired by premium brands such as N
 * Color Selection
 * Quantity Selector
 * Related Products
-* Add to Cart
-* Buy Now
 
-### 🛒 Shopping Cart
+### Shopping Cart
 
-* View Cart Items
+* Add Product to Cart
 * Update Quantity
+* Change Variant
 * Remove Product
-* Order Summary
-* Shipping Information
-* Checkout Button
+* Cart Summary
 
-### ⭐ Review & Rating
+### Checkout
+
+* Customer Information
+* Shipping Information
+* Order Summary
+* Checkout Validation
+
+### Wishlist
+
+* Add to Wishlist
+* Remove from Wishlist
+* Wishlist Management
+
+### Review & Rating (Planned)
 
 * Customer Reviews
 * Rating Summary
 * Verified Purchase Badge
 
-### 👤 User Account (Planned)
+### User Account (Planned)
 
 * Register
 * Login
 * Profile Management
 * Order History
-* Wishlist
 
 ---
 
@@ -134,35 +146,82 @@ The project follows a modern UI/UX approach inspired by premium brands such as N
 
 ---
 
-# 📂 Project Structure
+## 📂 Project Structure
 
 ```bash
-src/
-├── app/
-│   ├── page.tsx
-│   ├── catalog/
-│   ├── cart/
-│   ├── checkout/
-│   └── product/
-│       └── [slug]/
-│           ├── page.tsx
-│           └── ProductDetailClient.tsx
+my-store
+├── app
+│   ├── (main)
+│   │   ├── cart
+│   │   ├── catalog
+│   │   ├── checkout
+│   │   ├── product
+│   │   ├── wishlist
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   │
+│   ├── auth
+│   │   ├── login
+│   │   ├── register
+│   │   ├── layout.tsx
+│   │   └── loading.tsx
+│   │
+│   ├── contexts
+│   │   └── AuthContext.tsx
+│   │
+│   ├── globals.css
+│   └── layout.tsx
 │
-├── components/
-│   ├── Navbar.tsx
-│   ├── Footer.tsx
-│   ├── ProductCard.tsx
-│   └── ui/
-│       ├── Button.tsx
-│       └── Badge.tsx
+├── components
+│   ├── layout
+│   └── ui
 │
-├── data/
-│   └── products.ts
+├── features
+│   ├── auth
+│   │   └── services
+│   │       └── authService.ts
+│   │
+│   └── main
+│       ├── home
+│       │   ├── components
+│       │   └── services
+│       │
+│       ├── product
+│       │   ├── components
+│       │   ├── helpers
+│       │   └── services
+│       │
+│       ├── catalog
+│       │   ├── components
+│       │   ├── constants
+│       │   ├── helpers
+│       │   └── types
+│       │
+│       ├── cart
+│       │   └── services
+│       │
+│       ├── wishlist
+│       │   ├── components
+│       │   ├── hooks
+│       │   ├── services
+│       │   └── types
+│       │
+│       ├── category
+│       │   ├── components
+│       │   └── services
+│       │
+│       └── brand
+│           └── services
 │
-├── lib/
+├── lib
+│   ├── axios.ts
 │   └── utils.ts
 │
-└── app/globals.css
+├── public
+├── package.json
+├── next.config.ts
+├── tsconfig.json
+└── README.md
 ```
 
 ---
@@ -203,9 +262,9 @@ npm start
 * [x] Catalog Page
 * [x] Product Detail Page
 * [x] Shopping Cart
-* [ ] Checkout Page
-* [ ] Authentication
-* [ ] Wishlist
+* [x] Checkout Page
+* [x] Authentication
+* [x] Wishlist
 
 ## Phase 2 – State Management
 

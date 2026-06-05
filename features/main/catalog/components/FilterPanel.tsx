@@ -24,7 +24,7 @@ export function FilterPanel({
     clearFilters,
 }: FilterPanelProps) {
     return (
-        <div className="rounded-3xl border border-[var(--border)] bg-[var(--card)] p-5">
+        <div className="rounded-3xl border border-[var(--border)] bg-[var(--card)] p-5 shadow-sm">
             <div className="mb-5 flex items-center gap-2">
                 <Filter className="h-5 w-5 text-[var(--accent)]" />
                 <h2 className="font-bold text-[var(--foreground)]">Filter</h2>

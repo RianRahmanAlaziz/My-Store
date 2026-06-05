@@ -5,13 +5,13 @@ import { useEffect, useState } from "react";
 import { Heart, LogIn, Menu, Search, ShoppingCart, User, X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/app/contexts/AuthContext";
-import { getCart } from "@/features/main/cart/services/cartService";
+import { useCartStore } from "@/features/main/cart/stores/useCartStore";
 
 export default function Navbar() {
     const [open, setOpen] = useState(false);
-    const [cartCount, setCartCount] = useState(0);
-
     const { user, loading } = useAuth();
+    const cartCount = useCartStore((state) => state.summary.total_items);
+    const fetchCart = useCartStore((state) => state.fetchCart);
 
     const menus = [
         { name: "All Shoes", href: "/catalog" },
@@ -21,25 +21,10 @@ export default function Navbar() {
     ];
 
     useEffect(() => {
-        const fetchCartCount = async () => {
-            if (!user) {
-                setCartCount(0);
-                return;
-            }
-
-            try {
-                const response = await getCart();
-
-                setCartCount(response.data?.summary?.total_items ?? 0);
-            } catch {
-                setCartCount(0);
-            }
-        };
-
-        if (!loading) {
-            fetchCartCount();
+        if (!loading && user) {
+            fetchCart().catch(() => null);
         }
-    }, [user, loading]);
+    }, [user, loading, fetchCart]);
 
     return (
         <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--card)]/80 backdrop-blur-xl">

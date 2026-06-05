@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { toast } from "react-toastify";
 import { addToCart } from "@/features/main/cart/services/cartService";
+import { useCartStore } from "@/features/main/cart/stores/useCartStore";
 
 
 export type ProductDetailItem = {
@@ -51,6 +52,7 @@ export type ProductDetailItem = {
 
 export default function ProductDetailClient({ product }: { product: ProductDetailItem }) {
     const [cartLoading, setCartLoading] = useState(false);
+    const fetchCart = useCartStore((state) => state.fetchCart);
     const [selectedSize, setSelectedSize] = useState<string | number | null>(null);
     const [selectedColor, setSelectedColor] = useState<string | null>(null);
     const [selectedImage, setSelectedImage] = useState(0);
@@ -132,6 +134,8 @@ export default function ProductDetailClient({ product }: { product: ProductDetai
                 product_variant_id: selectedVariant.id,
                 quantity,
             });
+
+            await fetchCart();
 
             toast.success("Produk berhasil ditambahkan ke cart");
         } catch (error: any) {

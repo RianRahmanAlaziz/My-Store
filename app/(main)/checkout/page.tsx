@@ -11,7 +11,8 @@ import {
 } from "lucide-react";
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/Button";
-import Select from "react-select";
+import Select, { SingleValue } from "react-select";
+import { useCartStore } from "@/features/main/cart/stores/useCartStore";
 
 export default function CheckoutPage() {
     const [step, setStep] = useState(1);
@@ -23,38 +24,26 @@ export default function CheckoutPage() {
         { number: 3, title: "Confirmation", icon: Check },
     ];
 
-    const orderItems = [
-        {
-            name: "Air Max Premium",
-            image: "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=200",
-            size: "42",
-            qty: 1,
-            price: 1899000,
-        },
-        {
-            name: "UltraBoost 22",
-            image: "https://images.unsplash.com/photo-1600185365778-7875a359b924?w=200",
-            size: "43",
-            qty: 2,
-            price: 2199000,
-        },
-    ];
+    const orderItems = useCartStore((state) => state.items);
+    const summary = useCartStore((state) => state.summary);
 
-    const provinceOptions = [
+    type ProvinceOption = { value: string; label: string };
+
+    const provinceOptions: ProvinceOption[] = [
         { value: "dki-jakarta", label: "DKI Jakarta" },
         { value: "jawa-barat", label: "Jawa Barat" },
         { value: "jawa-tengah", label: "Jawa Tengah" },
         { value: "jawa-timur", label: "Jawa Timur" },
     ];
-    const [province, setProvince] = useState(null);
+    const [province, setProvince] = useState<ProvinceOption | null>(null);
 
-    const subtotal = orderItems.reduce(
-        (sum, item) => sum + item.price * item.qty,
-        0
-    );
+    const handleProvinceChange = (option: SingleValue<ProvinceOption>) => {
+        setProvince(option);
+    };
 
-    const shipping = subtotal > 500000 ? 0 : 25000;
-    const total = subtotal + shipping;
+    const subtotal = summary.subtotal;
+    const shipping = summary.shipping;
+    const total = summary.total;
 
     return (
         <main className="min-h-screen bg-[var(--background)]">
@@ -138,7 +127,7 @@ export default function CheckoutPage() {
                                     <Select
                                         options={provinceOptions}
                                         value={province}
-                                        onChange={setProvince}
+                                        onChange={handleProvinceChange}
                                         placeholder="Select Province"
                                         className="react-select-container"
                                         classNamePrefix="react-select"
@@ -338,7 +327,7 @@ export default function CheckoutPage() {
 
                             <div className="mb-6 space-y-4">
                                 {orderItems.map((item) => (
-                                    <div key={item.name} className="flex gap-4">
+                                    <div key={item.id} className="flex gap-4">
                                         <div className="h-16 w-16 overflow-hidden rounded-xl bg-[var(--muted)]">
                                             <img
                                                 src={item.image}
@@ -353,12 +342,12 @@ export default function CheckoutPage() {
                                             </h4>
 
                                             <p className="text-xs text-[var(--muted)]">
-                                                Size: {item.size} × {item.qty}
+                                                Size: {item.size} / {item.color} × {item.quantity}
                                             </p>
                                         </div>
 
                                         <span className="font-semibold text-[var(--foreground)]">
-                                            {formatShortPrice(item.price * item.qty)}
+                                            {formatShortPrice(item.subtotal)}
                                         </span>
                                     </div>
                                 ))}
