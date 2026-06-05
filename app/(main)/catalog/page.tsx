@@ -1,18 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { SlidersHorizontal } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
 import { ProductCard } from "@/features/main/product/components/ProductCard";
 
-import { getProducts } from "@/features/main/product/services/productService";
-import { getCategories } from "@/features/main/category/services/categoryService";
-import { getBrands } from "@/features/main/brand/services/brandService";
-
-import { Option } from "@/features/main/catalog/types/catalog";
 import { normalizeProduct } from "@/features/main/catalog/helpers/normalizeProduct";
-
 
 import { CatalogSearchSort } from "@/features/main/catalog/components/CatalogSearchSort";
 import { ActiveFilters } from "@/features/main/catalog/components/ActiveFilters";
@@ -21,82 +14,46 @@ import { FilterDrawer } from "@/features/main/catalog/components/FilterDrawer";
 import { EmptyProduct } from "@/features/main/catalog/components/EmptyProduct";
 import { CatalogSkeleton } from "@/features/main/catalog/components/CatalogSkeleton";
 import { FilterSkeleton } from "@/features/main/catalog/components/FilterSkeleton";
+import { useCatalogPage } from "@/features/main/catalog/hooks/useCatalogPage";
+import { useEffect } from "react";
+import { useWishlistStore } from "@/features/main/wishlist/stores/useWishlistStore";
+import { useAuth } from "@/app/contexts/AuthContext";
 
 export default function CatalogPage() {
-    const [products, setProducts] = useState<any[]>([]);
-    const [categories, setCategories] = useState<Option[]>([]);
-    const [brands, setBrands] = useState<Option[]>([]);
 
-    const [search, setSearch] = useState("");
-    const [category, setCategory] = useState("all");
-    const [brand, setBrand] = useState("all");
-    const [sort, setSort] = useState("latest");
+    const {
+        products,
+        categories,
+        brands,
+        openFilter,
+        loading,
 
-    const [openFilter, setOpenFilter] = useState(false);
-    const [loading, setLoading] = useState(true);
+        search,
+        category,
+        brand,
+        sort,
 
-    const fetchMasterData = async () => {
-        const [categoryRes, brandRes] = await Promise.all([
-            getCategories(),
-            getBrands(),
-        ]);
+        setOpenFilter,
+        setSearch,
+        setCategory,
+        setBrand,
+        setSort,
+        resetFilters,
+    } = useCatalogPage();
 
-        setCategories([
-            { value: "all", label: "All" },
-            ...categoryRes.data.map((item: any) => ({
-                value: item.slug,
-                label: item.name,
-            })),
-        ]);
+    const { user, loading: authLoading } = useAuth();
+    const fetchWishlist = useWishlistStore((state) => state.fetchWishlist);
+    const clearLocalItems = useWishlistStore((state) => state.clearLocalItems);
 
-        setBrands([
-            { value: "all", label: "All" },
-            ...brandRes.data.map((item: any) => ({
-                value: item.slug,
-                label: item.name,
-            })),
-        ]);
-    };
+    useEffect(() => {
+        if (authLoading) return;
 
-    const fetchProducts = async () => {
-        setLoading(true);
-
-        try {
-            const response = await getProducts({
-                search: search || undefined,
-                category: category !== "all" ? category : undefined,
-                brand: brand !== "all" ? brand : undefined,
-                sort,
-                per_page: 12,
-            });
-
-            setProducts(response.data);
-        } catch (error) {
-            console.error(error);
-            setProducts([]);
-        } finally {
-            setLoading(false);
+        if (user) {
+            fetchWishlist();
+        } else {
+            clearLocalItems();
         }
-    };
-
-    useEffect(() => {
-        fetchMasterData();
-    }, []);
-
-    useEffect(() => {
-        const delay = setTimeout(() => {
-            fetchProducts();
-        }, 400);
-
-        return () => clearTimeout(delay);
-    }, [search, category, brand, sort]);
-
-    const clearFilters = () => {
-        setSearch("");
-        setCategory("all");
-        setBrand("all");
-        setSort("latest");
-    };
+    }, [user, authLoading, fetchWishlist, clearLocalItems]);
 
     return (
         <main className="bg-[var(--background)]">
@@ -113,7 +70,7 @@ export default function CatalogPage() {
                             search={search}
                             setCategory={setCategory}
                             setBrand={setBrand}
-                            clearFilters={clearFilters}
+                            clearFilters={resetFilters}
                         />
                     )}
                 </aside>
@@ -164,7 +121,7 @@ export default function CatalogPage() {
                             ))}
                         </div>
                     ) : (
-                        <EmptyProduct onReset={clearFilters} />
+                        <EmptyProduct onReset={resetFilters} />
                     )}
                 </div>
             </section>
@@ -179,7 +136,7 @@ export default function CatalogPage() {
                 setOpen={setOpenFilter}
                 setCategory={setCategory}
                 setBrand={setBrand}
-                clearFilters={clearFilters}
+                clearFilters={resetFilters}
             />
         </main>
     );

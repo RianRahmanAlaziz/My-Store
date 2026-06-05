@@ -1,56 +1,27 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-
-import { getWishlist, removeWishlist } from "@/features/main/wishlist/services/wishlistService";
-import { normalizeProductCard } from "@/features/main/product/helpers/normalizeProduct";
-import type { WishlistItem } from "@/features/main/wishlist/types/wishlist";
+import { useEffect } from "react";
+import { useAuth } from "@/app/contexts/AuthContext";
+import { useWishlistStore } from "@/features/main/wishlist/stores/useWishlistStore";
 
 export function useWishlist() {
-    const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
-    const [loading, setLoading] = useState(true);
+    const { user, loading: authLoading } = useAuth();
 
-    const fetchWishlist = async () => {
-        try {
-            setLoading(true);
-
-            const response = await getWishlist();
-
-            const items = response.data.map((item: any) => ({
-                id: item.id,
-                product: normalizeProductCard(item.product),
-            }));
-
-            setWishlistItems(items);
-        } catch {
-            toast.error("Gagal mengambil data wishlist");
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const removeItem = async (wishlistId: number) => {
-        try {
-            await removeWishlist(wishlistId);
-
-            setWishlistItems((items) =>
-                items.filter((item) => item.id !== wishlistId)
-            );
-
-            toast.success("Produk berhasil dihapus dari wishlist");
-        } catch {
-            toast.error("Gagal menghapus wishlist");
-        }
-    };
-
-    const clearLocalItems = () => {
-        setWishlistItems([]);
-    };
+    const wishlistItems = useWishlistStore((state) => state.items);
+    const loading = useWishlistStore((state) => state.loading);
+    const fetchWishlist = useWishlistStore((state) => state.fetchWishlist);
+    const clearLocalItems = useWishlistStore((state) => state.clearLocalItems);
+    const removeItem = useWishlistStore((state) => state.removeItem);
 
     useEffect(() => {
-        fetchWishlist();
-    }, []);
+        if (authLoading) return;
+
+        if (user) {
+            fetchWishlist();
+        } else {
+            clearLocalItems();
+        }
+    }, [user, authLoading, fetchWishlist, clearLocalItems]);
 
     return {
         wishlistItems,

@@ -70,12 +70,15 @@ type CartStore = {
     updatingId: number | null;
     hydrated: boolean;
     error: string | null;
+
     setHydrated: (hydrated: boolean) => void;
     fetchCart: () => Promise<void>;
     changeQuantity: (cartId: number, quantity: number) => Promise<void>;
     changeVariant: (cartId: number, variantId: number) => Promise<void>;
     removeItem: (cartId: number) => Promise<void>;
+
     clearCart: () => Promise<void>;
+    clearCartState: () => void;
 };
 
 export const useCartStore = create<CartStore>()(
@@ -93,6 +96,7 @@ export const useCartStore = create<CartStore>()(
             fetchCart: async () => {
                 try {
                     set({ loading: true, error: null });
+
                     const response = await getCart();
                     const items = normalizeCartItems(response);
 
@@ -101,8 +105,21 @@ export const useCartStore = create<CartStore>()(
                         summary: buildSummary(items, response?.data?.summary),
                     });
                 } catch (error: any) {
-                    set({ error: error?.response?.data?.message ?? "Gagal mengambil cart" });
-                    throw error;
+                    if (error?.response?.status === 401) {
+                        set({
+                            items: [],
+                            summary: DEFAULT_SUMMARY,
+                            error: null,
+                        });
+
+                        return;
+                    }
+
+                    set({
+                        error:
+                            error?.response?.data?.message ??
+                            "Gagal mengambil cart",
+                    });
                 } finally {
                     set({ loading: false });
                 }
@@ -139,8 +156,11 @@ export const useCartStore = create<CartStore>()(
                     set({
                         items: previousItems,
                         summary: buildSummary(previousItems),
-                        error: error?.response?.data?.message ?? "Gagal update quantity",
+                        error:
+                            error?.response?.data?.message ??
+                            "Gagal update quantity",
                     });
+
                     throw error;
                 } finally {
                     set({ updatingId: null });
@@ -151,7 +171,9 @@ export const useCartStore = create<CartStore>()(
                 const item = get().items.find((cartItem) => cartItem.id === cartId);
                 if (!item) return;
 
-                const selectedVariant = item.variants.find((variant) => variant.id === variantId);
+                const selectedVariant = item.variants.find(
+                    (variant) => variant.id === variantId
+                );
                 if (!selectedVariant) return;
 
                 const previousItems = get().items;
@@ -167,15 +189,24 @@ export const useCartStore = create<CartStore>()(
                 );
 
                 try {
-                    set({ items: nextItems, updatingId: cartId, error: null });
+                    set({
+                        items: nextItems,
+                        summary: buildSummary(nextItems),
+                        updatingId: cartId,
+                        error: null,
+                    });
+
                     await updateCartVariant(cartId, variantId, item.quantity);
                     await get().fetchCart();
                 } catch (error: any) {
                     set({
                         items: previousItems,
                         summary: buildSummary(previousItems),
-                        error: error?.response?.data?.message ?? "Gagal mengubah variant",
+                        error:
+                            error?.response?.data?.message ??
+                            "Gagal mengubah variant",
                     });
+
                     throw error;
                 } finally {
                     set({ updatingId: null });
@@ -193,14 +224,18 @@ export const useCartStore = create<CartStore>()(
                         updatingId: cartId,
                         error: null,
                     });
+
                     await removeCartItem(cartId);
                     await get().fetchCart();
                 } catch (error: any) {
                     set({
                         items: previousItems,
                         summary: buildSummary(previousItems),
-                        error: error?.response?.data?.message ?? "Gagal menghapus cart",
+                        error:
+                            error?.response?.data?.message ??
+                            "Gagal menghapus cart",
                     });
+
                     throw error;
                 } finally {
                     set({ updatingId: null });
@@ -211,18 +246,46 @@ export const useCartStore = create<CartStore>()(
                 const previousItems = get().items;
 
                 try {
-                    set({ items: [], summary: DEFAULT_SUMMARY, loading: true, error: null });
+                    set({
+                        items: [],
+                        summary: DEFAULT_SUMMARY,
+                        loading: true,
+                        error: null,
+                    });
+
                     await clearCartApi();
                 } catch (error: any) {
+                    if (error?.response?.status === 401) {
+                        set({
+                            items: [],
+                            summary: DEFAULT_SUMMARY,
+                            error: null,
+                        });
+
+                        return;
+                    }
+
                     set({
                         items: previousItems,
                         summary: buildSummary(previousItems),
-                        error: error?.response?.data?.message ?? "Gagal mengosongkan cart",
+                        error:
+                            error?.response?.data?.message ??
+                            "Gagal mengosongkan cart",
                     });
+
                     throw error;
                 } finally {
                     set({ loading: false });
                 }
+            },
+
+            clearCartState: () => {
+                set({
+                    items: [],
+                    summary: DEFAULT_SUMMARY,
+                    updatingId: null,
+                    error: null,
+                });
             },
         }),
         {

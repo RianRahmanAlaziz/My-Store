@@ -1,14 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
 import { Heart, ShoppingCart, Star, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { motion } from "motion/react";
-import { addWishlist, removeWishlistByProduct } from "@/features/main/wishlist/services/wishlistService";
 import { addToCart } from "@/features/main/cart/services/cartService";
+import { useWishlistStore } from "@/features/main/wishlist/stores/useWishlistStore";
 import { toast } from "react-toastify";
+import { useAuth } from "@/app/contexts/AuthContext";
 
 export type ProductCardItem = {
     id: number;
@@ -33,8 +33,16 @@ type ProductCardProps = {
 };
 
 export function ProductCard({ product, topAction }: ProductCardProps) {
-    const [wishlistLoading, setWishlistLoading] = useState(false);
-    const [isWishlisted, setIsWishlisted] = useState(product.isWishlisted ?? false);
+    const { user } = useAuth();
+
+    const toggleWishlist = useWishlistStore((state) => state.toggleByProduct);
+    const isWishlistedStore = useWishlistStore((state) =>
+        state.items.some((item) => item.product.slug === product.slug)
+    );
+    const actionLoadingId = useWishlistStore((state) => state.actionLoadingId);
+
+    const wishlistLoading = actionLoadingId === product.id;
+    const isWishlisted = product.isWishlisted || isWishlistedStore;
 
     const discount = product.originalPrice
         ? Math.round(
@@ -42,31 +50,14 @@ export function ProductCard({ product, topAction }: ProductCardProps) {
         )
         : 0;
 
+
     const handleWishlist = async () => {
-        try {
-            setWishlistLoading(true);
-
-            if (isWishlisted) {
-                await removeWishlistByProduct(product.slug);
-
-                setIsWishlisted(false);
-
-                toast.success("Produk dihapus dari wishlist");
-            } else {
-                await addWishlist(product.id);
-
-                setIsWishlisted(true);
-
-                toast.success("Produk ditambahkan ke wishlist");
-            }
-        } catch (error: any) {
-            toast.error(
-                error?.response?.data?.message ??
-                "Terjadi kesalahan"
-            );
-        } finally {
-            setWishlistLoading(false);
+        if (!user) {
+            toast.info("Silakan login terlebih dahulu");
+            return;
         }
+
+        await toggleWishlist(product);
     };
 
     return (

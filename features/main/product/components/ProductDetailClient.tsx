@@ -19,6 +19,7 @@ import { Badge } from "@/components/ui/Badge";
 import { toast } from "react-toastify";
 import { addToCart } from "@/features/main/cart/services/cartService";
 import { useCartStore } from "@/features/main/cart/stores/useCartStore";
+import { useAuth } from "@/app/contexts/AuthContext";
 
 
 export type ProductDetailItem = {
@@ -51,6 +52,7 @@ export type ProductDetailItem = {
 };
 
 export default function ProductDetailClient({ product }: { product: ProductDetailItem }) {
+    const { user } = useAuth();
     const [cartLoading, setCartLoading] = useState(false);
     const fetchCart = useCartStore((state) => state.fetchCart);
     const [selectedSize, setSelectedSize] = useState<string | number | null>(null);
@@ -106,6 +108,7 @@ export default function ProductDetailClient({ product }: { product: ProductDetai
             : null;
 
     const handleAddToCart = async () => {
+
         try {
             if (!selectedSize) {
                 toast.error("Pilih ukuran terlebih dahulu");
@@ -128,7 +131,10 @@ export default function ProductDetailClient({ product }: { product: ProductDetai
             }
 
             setCartLoading(true);
-
+            if (!user) {
+                toast.info("Silakan login terlebih dahulu");
+                return;
+            }
             await addToCart({
                 product_id: product.id,
                 product_variant_id: selectedVariant.id,

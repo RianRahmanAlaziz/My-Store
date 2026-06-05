@@ -6,25 +6,72 @@ import { Heart, LogIn, Menu, Search, ShoppingCart, User, X } from "lucide-react"
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/app/contexts/AuthContext";
 import { useCartStore } from "@/features/main/cart/stores/useCartStore";
+import { getCategories } from "@/features/main/category/services/categoryService";
+import { useCatalogStore } from "@/features/main/catalog/stores/useCatalogStore";
+
+type CategoryMenu = {
+    id: number;
+    name: string;
+    slug: string;
+};
 
 export default function Navbar() {
     const [open, setOpen] = useState(false);
+    const [categories, setCategories] = useState<CategoryMenu[]>([]);
+
     const { user, loading } = useAuth();
+
     const cartCount = useCartStore((state) => state.summary.total_items);
     const fetchCart = useCartStore((state) => state.fetchCart);
+    const clearCartState = useCartStore((state) => state.clearCartState);
+
+    const setCategory = useCatalogStore(
+        (state) => state.setCategory
+    );
+
+    const resetFilters = useCatalogStore(
+        (state) => state.resetFilters
+    );
+
+    const handleCategoryClick = (slug: string) => {
+        resetFilters();
+        setCategory(slug);
+        setOpen(false);
+    };
 
     const menus = [
-        { name: "All Shoes", href: "/catalog" },
-        { name: "Running", href: "/catalog?category=running" },
-        { name: "Lifestyle", href: "/catalog?category=lifestyle" },
-        { name: "Casual", href: "/catalog?category=casual" },
+        {
+            name: "All Shoes",
+            slug: "all",
+        },
+        ...categories.map((category) => ({
+            name: category.name,
+            slug: category.slug,
+        })),
     ];
 
     useEffect(() => {
-        if (!loading && user) {
-            fetchCart().catch(() => null);
+        async function fetchCategories() {
+            try {
+                const response = await getCategories();
+                setCategories(response.data ?? []);
+            } catch {
+                setCategories([]);
+            }
         }
-    }, [user, loading, fetchCart]);
+
+        fetchCategories();
+    }, []);
+
+    useEffect(() => {
+        if (loading) return;
+
+        if (user) {
+            fetchCart().catch(() => null);
+        } else {
+            clearCartState();
+        }
+    }, [user, loading, fetchCart, clearCartState]);
 
     return (
         <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--card)]/80 backdrop-blur-xl">
@@ -46,7 +93,12 @@ export default function Navbar() {
                     {menus.map((menu) => (
                         <Link
                             key={menu.name}
-                            href={menu.href}
+                            href="/catalog"
+                            onClick={() =>
+                                menu.slug === "all"
+                                    ? resetFilters()
+                                    : handleCategoryClick(menu.slug)
+                            }
                             className="text-sm font-medium text-[var(--foreground)] transition hover:text-[var(--accent)]"
                         >
                             {menu.name}
@@ -126,8 +178,14 @@ export default function Navbar() {
                         {menus.map((menu) => (
                             <Link
                                 key={menu.name}
-                                href={menu.href}
-                                onClick={() => setOpen(false)}
+                                href="/catalog"
+                                onClick={() => {
+                                    if (menu.slug === "all") {
+                                        resetFilters();
+                                    } else {
+                                        handleCategoryClick(menu.slug);
+                                    }
+                                }}
                                 className="rounded-xl px-4 py-3 text-sm font-medium text-[var(--muted)] transition hover:bg-[var(--secondary)] hover:text-[var(--accent)]"
                             >
                                 {menu.name}
