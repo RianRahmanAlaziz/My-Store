@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Heart } from "lucide-react";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/main/ui/Button";
 
 export function WishlistEmpty() {
     return (

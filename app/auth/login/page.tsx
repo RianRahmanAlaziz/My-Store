@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
 import { motion } from "motion/react";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/main/ui/Button";
 import { login } from "@/features/auth/services/authService";
 import { toast } from "react-toastify";
 

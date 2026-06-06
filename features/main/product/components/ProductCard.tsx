@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { Heart, ShoppingCart, Star, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
+import { Button } from "@/components/main/ui/Button";
+import { Badge } from "@/components/main/ui/Badge";
 import { motion } from "motion/react";
 import { addToCart } from "@/features/main/cart/services/cartService";
 import { useWishlistStore } from "@/features/main/wishlist/stores/useWishlistStore";

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/main/ui/Button";
 import { ProductCard } from "@/features/main/product/components/ProductCard";
 import type { ProductCardItem } from "@/features/main/product/components/ProductCard";
 
@@ -21,7 +21,7 @@ export function ProductSection({
 
     return (
         <section
-            className={`mx-auto max-w-7xl px-4 py-20 lg:px-8 ${variant === "soft" ? "mt-7 shadow-lg rounded-[1rem] border border-[var(--border)] bg-[var(--card)]" : ""
+            className={`mx-auto max-w-7xl my-16 px-4 py-20 lg:px-8 ${variant === "soft" ? "shadow-lg rounded-[1rem] border border-[var(--border)] bg-[var(--card)]" : ""
                 }`}
         >
             <div className="mb-8 flex items-end justify-between gap-4">

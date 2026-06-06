@@ -11,7 +11,7 @@ import {
     User,
 } from "lucide-react";
 import { motion } from "motion/react";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/main/ui/Button";
 
 export default function RegisterPage() {
     const [showPassword, setShowPassword] = useState(false);

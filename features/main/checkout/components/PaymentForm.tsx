@@ -2,7 +2,7 @@
 
 import { CreditCard, Package, Smartphone } from "lucide-react";
 import { motion } from "motion/react";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/main/ui/Button";
 import { CheckoutInput } from "@/features/main/checkout/components/CheckoutInput";
 import { PaymentOption } from "@/features/main/checkout/components/PaymentOption";
 import type {

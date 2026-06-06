@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/main/ui/Button";
 import { Option } from "../types/catalog";
 import { FilterPanel } from "./FilterPanel";
 

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ShoppingBag } from "lucide-react";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/main/ui/Button";
 
 export function CartEmpty() {
     return (

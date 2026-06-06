@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Check } from "lucide-react";
 import { motion } from "motion/react";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/main/ui/Button";
 import { formatPrice } from "@/features/main/checkout/utils/formatPrice";
 import type { PaymentMethod } from "@/features/main/checkout/types/checkout";
 

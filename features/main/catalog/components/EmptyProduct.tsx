@@ -1,5 +1,5 @@
 import { Search } from "lucide-react";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/main/ui/Button";
 
 type EmptyProductProps = {
     onReset: () => void;

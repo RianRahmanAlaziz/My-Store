@@ -2,7 +2,7 @@
 
 import { SlidersHorizontal } from "lucide-react";
 
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/main/ui/Button";
 import { ProductCard } from "@/features/main/product/components/ProductCard";
 
 import { normalizeProduct } from "@/features/main/catalog/helpers/normalizeProduct";

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, Truck } from "lucide-react";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/main/ui/Button";
 import { SummaryRow } from "@/features/main/cart/components/SummaryRow";
 import type { CartSummary as CartSummaryType } from "@/features/main/cart/types/cart";
 

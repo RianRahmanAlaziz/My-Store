@@ -5,7 +5,7 @@ import {
     Phone,
 } from "lucide-react";
 import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/main/ui/Button";
 
 export default function Footer() {
     const shopLinks = [

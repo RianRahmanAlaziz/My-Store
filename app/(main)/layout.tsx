@@ -1,7 +1,8 @@
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
+import "@/app/globals.css";
+import Navbar from "@/components/main/layouts/Navbar";
+import Footer from "@/components/main/layouts/Footer";
 import { AuthProvider } from "@/app/contexts/AuthContext";
-import { AppLoader } from "@/components/layout/AppLoader";
+import { AppLoader } from "@/components/main/layouts/AppLoader";
 
 export default function MainLayout({
     children,
@@ -9,7 +10,7 @@ export default function MainLayout({
     children: React.ReactNode;
 }) {
     return (
-        <>
+        <div className="min-h-screen bg-background text-foreground">
             <AuthProvider>
                 <AppLoader>
                     <Navbar />
@@ -19,6 +20,6 @@ export default function MainLayout({
                     <Footer />
                 </AppLoader>
             </AuthProvider>
-        </>
+        </div>
     );
 }

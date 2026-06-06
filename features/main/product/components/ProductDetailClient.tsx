@@ -14,8 +14,8 @@ import {
     Loader2,
 } from "lucide-react";
 import { motion } from "motion/react";
-import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
+import { Button } from "@/components/main/ui/Button";
+import { Badge } from "@/components/main/ui/Badge";
 import { toast } from "react-toastify";
 import { addToCart } from "@/features/main/cart/services/cartService";
 import { useCartStore } from "@/features/main/cart/stores/useCartStore";

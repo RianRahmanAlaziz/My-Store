@@ -2,7 +2,7 @@
 
 import Select, { SingleValue } from "react-select";
 import { motion } from "motion/react";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/main/ui/Button";
 import { CheckoutInput } from "@/features/main/checkout/components/CheckoutInput";
 import type {
     CheckoutStep,
