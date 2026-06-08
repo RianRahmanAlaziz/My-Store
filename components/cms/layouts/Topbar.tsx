@@ -60,7 +60,7 @@ export default function Topbar() {
                 </nav>
 
                 <div className="intro-x relative mr-3 sm:mr-6">
-                    <div className="search hidden sm:block">
+                    {/* <div className="search hidden sm:block">
                         <input
                             type="text"
                             className="search__input form-control border-transparent"
@@ -78,7 +78,7 @@ export default function Topbar() {
                             <path d="m504.68 469.32-143.68-143.68a200.79 200.79 0 0 0 42.58-123.85c0-111.27-90.52-201.79-201.79-201.79s-201.79 90.52-201.79 201.79 90.52 201.79 201.79 201.79a200.79 200.79 0 0 0 123.85-42.58l143.68 143.68a25 25 0 0 0 35.36-35.36zm-454.68-267.53c0-83.7 68.09-151.79 151.79-151.79s151.79 68.09 151.79 151.79-68.09 151.79-151.79 151.79-151.79-68.09-151.79-151.79z" />
                             <path d="m271 462h-150a25 25 0 0 0 0 50h150a25 25 0 0 0 0-50z" />
                         </svg>
-                    </div>
+                    </div> */}
                 </div>
 
                 <div className="intro-x dropdown mr-4 sm:mr-6" ref={notifRef}>

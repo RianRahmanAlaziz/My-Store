@@ -11,17 +11,17 @@ import {
     Plus,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import useCategories from "@/features/cms/categories/hooks/useCategories";
 import Modal from "@/components/cms/common/Modal";
-import InputCategories from "@/features/cms/categories/components/InputCategories";
 import Modaldelete from "@/components/cms/common/ModalDelete";
+import useBrands from "@/features/cms/brands/hooks/useBrands";
+import InputBrands from "@/features/cms/brands/components/InputBrands";
 
-export default function CategoriesPage() {
+export default function BrandPage() {
 
     const {
         isOpen,
         isOpenDelete,
-        categories,
+        brands,
         loading,
         searchTerm,
         setSearchTerm,
@@ -35,23 +35,22 @@ export default function CategoriesPage() {
         setIsOpen,
         setIsOpenDelete,
         handlePageChange,
-        handleSaveCategories,
-        openAddCategoriesModal,
-        openEditCategoryModal,
+        handleSave,
+        openAddModal,
+        openEditModal,
         openModalDelete,
-        handleDeleteCategories,
-    } = useCategories();
-
+        handleDelete,
+    } = useBrands();
     return (
         <>
-            <h2 className="intro-y text-lg font-medium sm:pt-24">Categories Management</h2>
+            <h2 className="intro-y text-lg font-medium sm:pt-24">Brands Management</h2>
             <div className="grid grid-cols-12 gap-6 mt-5">
                 <div className="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
                     <button
                         type="button"
-                        onClick={openAddCategoriesModal}
+                        onClick={openAddModal}
                         className="btn btn-primary shadow-lg">
-                        <Plus className='pr-1.5' /> Category
+                        <Plus className='pr-1.5' /> Brand
                     </button>
                     <div className="hidden md:block mx-auto text-slate-500" />
 
@@ -92,8 +91,8 @@ export default function CategoriesPage() {
                                         </div>
                                     </td>
                                 </tr>
-                            ) : categories.length > 0 ? (
-                                [...categories]
+                            ) : brands.length > 0 ? (
+                                [...brands]
                                     .filter(
                                         (u) =>
                                             u.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -115,7 +114,7 @@ export default function CategoriesPage() {
                                                 <div className="flex justify-center items-center">
                                                     <button
                                                         type="button"
-                                                        onClick={() => openEditCategoryModal(u)}
+                                                        onClick={() => openEditModal(u)}
                                                         className="flex items-center mr-3 "
                                                     >
                                                         <CheckSquare className="w-4 h-4 mr-1" /> Edit
@@ -209,13 +208,15 @@ export default function CategoriesPage() {
                 </div>
             </div >
 
+
+
             <Modal
                 isOpen={isOpen}
                 onClose={() => setIsOpen(false)}
                 title={modalData.title}
-                onSave={handleSaveCategories}
+                onSave={handleSave}
             >
-                <InputCategories
+                <InputBrands
                     formData={formData}
                     setFormData={setFormData}
                     errors={errors}
@@ -226,7 +227,7 @@ export default function CategoriesPage() {
             <Modaldelete
                 isOpenDelete={isOpenDelete}
                 onClose={() => setIsOpenDelete(false)}
-                onDelete={handleDeleteCategories}
+                onDelete={handleDelete}
                 title={modalDataDelete.title}
             />
 
