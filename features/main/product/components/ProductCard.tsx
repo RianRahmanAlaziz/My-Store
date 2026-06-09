@@ -9,6 +9,8 @@ import { addToCart } from "@/features/main/cart/services/cartService";
 import { useWishlistStore } from "@/features/main/wishlist/stores/useWishlistStore";
 import { toast } from "react-toastify";
 import { useAuth } from "@/app/contexts/AuthContext";
+import { getImageUrl } from "@/lib/image";
+import Image from "next/image";
 
 export type ProductCardItem = {
     id: number;
@@ -69,10 +71,13 @@ export function ProductCard({ product, topAction }: ProductCardProps) {
         >
             <div className="relative aspect-square overflow-hidden bg-[var(--secondary)]">
                 <Link href={`/product/${product.slug}`} className="block h-full w-full">
-                    <img
-                        src={product.image}
+
+                    <Image
+                        src={getImageUrl(product.image)}
                         alt={product.name}
-                        className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
+                        fill
+                        sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                        className="object-cover transition duration-500 group-hover:scale-110"
                     />
                 </Link>
 

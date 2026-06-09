@@ -5,6 +5,7 @@ import type { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { axiosInstance } from "@/lib/axios";
 
+
 export type ProductVariant = {
     id?: number | string;
     size: string;
@@ -15,7 +16,8 @@ export type ProductVariant = {
 export type ProductItem = {
     id: number | string;
     name: string;
-    slug?: string;
+    slug: string;
+    sku: string;
     description?: string;
     price: number | string;
     status?: string;
@@ -25,6 +27,10 @@ export type ProductItem = {
         id: number | string;
         name: string;
     };
+    images?: {
+        id: number;
+        image: string;
+    }[];
     category?: {
         id: number | string;
         name: string;
@@ -57,12 +63,12 @@ export type ModalMode = "add" | "edit";
 export type ModalData = {
     title: string;
     mode: ModalMode;
-    editId: number | string | null;
+    editSlug: string | null;
 };
 
 export type ModalDeleteData = {
     title: string;
-    id?: number | string;
+    slug?: string;
 };
 
 const DEFAULT_FORM_DATA: FormDataProduct = {
@@ -82,49 +88,46 @@ const DEFAULT_PAGINATION: Pagination = {
     total: 0,
 };
 
-function normalizeProductResponse(response: any) {
+const normalizeProductsPayload = (response: any) => {
     const payload = response?.data;
 
-    const paginated =
-        payload?.data?.data
-        ?? payload?.data?.products?.data
-        ?? payload?.products?.data
-        ?? null;
-
     const products =
-        Array.isArray(paginated)
-            ? paginated
+        Array.isArray(payload?.data?.data)
+            ? payload.data.data
             : Array.isArray(payload?.data)
                 ? payload.data
-                : Array.isArray(payload?.products)
-                    ? payload.products
-                    : Array.isArray(payload)
-                        ? payload
-                        : [];
+                : Array.isArray(payload?.products?.data)
+                    ? payload.products.data
+                    : Array.isArray(payload?.products)
+                        ? payload.products
+                        : Array.isArray(payload)
+                            ? payload
+                            : [];
 
     const meta =
         payload?.data?.current_page
             ? payload.data
-            : payload?.data?.products?.current_page
-                ? payload.data.products
-                : payload?.products?.current_page
-                    ? payload.products
-                    : null;
+            : payload?.products?.current_page
+                ? payload.products
+                : null;
 
     return {
         products,
         pagination: {
             current_page: Number(meta?.current_page ?? 1),
             last_page: Number(meta?.last_page ?? 1),
-            per_page: Number(meta?.per_page ?? products.length ?? 10),
-            total: Number(meta?.total ?? products.length ?? 0),
+            per_page: Number(meta?.per_page ?? 10),
+            total: Number(meta?.total ?? products.length),
         },
     };
-}
+};
 
 export default function useProducts() {
     const [isOpen, setIsOpen] = useState(false);
     const [isOpenDelete, setIsOpenDelete] = useState(false);
+
+    const [isOpenDetail, setIsOpenDetail] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState<any>(null);
 
     const [products, setProducts] = useState<ProductItem[]>([]);
     const [errors, setErrors] = useState<FieldErrors>({});
@@ -141,13 +144,18 @@ export default function useProducts() {
     const [modalData, setModalData] = useState<ModalData>({
         title: "",
         mode: "add",
-        editId: null,
+        editSlug: null,
     });
 
     const [modalDataDelete, setModalDataDelete] =
         useState<ModalDeleteData>({
             title: "",
         });
+
+    const openDetailModal = (product: any) => {
+        setSelectedProduct(product);
+        setIsOpenDetail(true);
+    };
 
     const fetchProducts = async (
         page = 1,
@@ -163,7 +171,7 @@ export default function useProducts() {
                 },
             });
 
-            const normalized = normalizeProductResponse(response);
+            const normalized = normalizeProductsPayload(response);
 
             setProducts(normalized.products);
             setPagination(normalized.pagination);
@@ -217,13 +225,14 @@ export default function useProducts() {
     });
 
     const handleSaveProduct = async (): Promise<void> => {
-        const { mode, editId } = modalData;
+        const { mode, editSlug } = modalData;
+
 
         try {
             setSaving(true);
             setErrors({});
 
-            const url = mode === "edit" ? `/products/${editId}` : "/products";
+            const url = mode === "edit" ? `/products/${editSlug}` : "/products";
             const method = mode === "edit" ? "put" : "post";
 
             await axiosInstance({
@@ -263,7 +272,7 @@ export default function useProducts() {
         setModalData({
             title: "Add New Product",
             mode: "add",
-            editId: null,
+            editSlug: null,
         });
         setIsOpen(true);
     };
@@ -291,7 +300,7 @@ export default function useProducts() {
         setModalData({
             title: "Edit Product",
             mode: "edit",
-            editId: product.id,
+            editSlug: product.slug,
         });
         setIsOpen(true);
     };
@@ -299,18 +308,18 @@ export default function useProducts() {
     const openModalDelete = (product: ProductItem): void => {
         setModalDataDelete({
             title: `Hapus product "${product.name}"?`,
-            id: product.id,
+            slug: product.slug,
         });
         setIsOpenDelete(true);
     };
 
     const handleDeleteProduct = async (): Promise<void> => {
-        if (modalDataDelete.id == null) return;
+        if (modalDataDelete.slug == null) return;
 
         try {
             setDeleting(true);
 
-            await axiosInstance.delete(`/products/${modalDataDelete.id}`);
+            await axiosInstance.delete(`/products/${modalDataDelete.slug}`);
 
             await fetchProducts(pagination.current_page, searchTerm);
 
@@ -349,5 +358,9 @@ export default function useProducts() {
         openEditProductModal,
         openModalDelete,
         handleDeleteProduct,
+        openDetailModal,
+        selectedProduct,
+        isOpenDetail,
+        setIsOpenDetail,
     };
 }

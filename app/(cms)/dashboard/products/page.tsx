@@ -11,13 +11,17 @@ import {
     Plus,
     Search,
     Trash2,
+    Eye,
 } from "lucide-react";
 
-import Modal from "@/components/cms/common/Modal";
+import Image from "next/image";
+import { getImageUrl } from "@/lib/image";
 import ModalDelete from "@/components/cms/common/ModalDelete";
-import InputProduct from "@/features/cms/products/components/InputProduct";
 import useProducts from "@/features/cms/products/hooks/useProducts";
 import { motion } from "motion/react";
+import Link from "next/link";
+import DetailModal from "@/components/cms/common/DetailModal";
+import ProductDetail from "@/features/cms/products/components/ProductDetail";
 
 function formatRupiah(value: number | string) {
     return new Intl.NumberFormat("id-ID", {
@@ -52,21 +56,26 @@ export default function ProductsPage() {
         openEditProductModal,
         openModalDelete,
         handleDeleteProduct,
+        openDetailModal,
+        selectedProduct,
+        isOpenDetail,
+        setIsOpenDetail,
     } = useProducts();
 
-    console.log(products.length);
 
     return (
         <>
-            <h2 className="intro-y text-lg font-medium sm:pt-24">Products Management</h2>
+            <h2 className="intro-y text-lg font-medium pt-7 sm:pt-24">Products Management</h2>
 
             <div className="grid grid-cols-12 gap-6 mt-5">
                 <div className="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
-                    <button
-                        onClick={openAddProductModal}
-                        className="btn btn-primary shadow-lg mr-2">
-                        <Plus className='pr-1.5' /> Product
-                    </button>
+                    <Link
+                        href="/dashboard/products/create"
+                        className="btn btn-primary flex items-center gap-2"
+                    >
+                        <Plus className="h-4 w-4" />
+                        Add Product
+                    </Link>
                     <div className="hidden md:block mx-auto text-slate-500" />
 
                     <div className="w-full sm:w-auto mt-3 sm:mt-0 sm:ml-auto md:ml-0">
@@ -92,12 +101,12 @@ export default function ProductsPage() {
                     <table className="table table-report -mt-2">
                         <thead>
                             <tr>
-                                <th className="whitespace-nowrap">Product</th>
-                                <th className="whitespace-nowrap">Brand</th>
-                                <th className="whitespace-nowrap">Category</th>
-                                <th className="whitespace-nowrap">Variants</th>
-                                <th className="whitespace-nowrap">Price</th>
-                                <th className="whitespace-nowrap">Status</th>
+                                <th className="whitespace-nowrap">IMAGES</th>
+                                <th className="whitespace-nowrap">PRODUCT NAME</th>
+                                <th className="text-center whitespace-nowrap">BRAND</th>
+                                <th className="text-center whitespace-nowrap">  CATEGORY</th>
+                                <th className="text-center whitespace-nowrap">PRICE</th>
+                                <th className="text-center whitespace-nowrap">STATUS</th>
                                 <th className="text-center whitespace-nowrap">ACTIONS</th>
                             </tr>
                         </thead>
@@ -119,15 +128,6 @@ export default function ProductsPage() {
                                 </tr>
                             ) : (
                                 products.map((product) => {
-                                    const variantCount =
-                                        product.variants?.length ?? 0;
-
-                                    const totalStock =
-                                        product.variants?.reduce(
-                                            (sum, variant) =>
-                                                sum + Number(variant.stock || 0),
-                                            0
-                                        ) ?? 0;
 
                                     const isActive =
                                         product.status === "active" ||
@@ -140,53 +140,83 @@ export default function ProductsPage() {
                                             whileHover={{ scale: 1.02 }}
                                             className="border-b last:border-b-0"
                                         >
+                                            <td className="w-40">
+                                                <div className="flex">
+                                                    {product.images?.slice(0, 3).map((image, index) => (
+                                                        <div
+                                                            key={image.id}
+                                                            className={`relative h-10 w-10 overflow-hidden rounded-full border-2 border-white zoom-in ${index > 0 ? "-ml-5" : ""
+                                                                }`}
+                                                        >
+                                                            <Image
+                                                                src={getImageUrl(image.image)}
+                                                                alt={product.name}
+                                                                fill
+                                                                sizes="40px"
+                                                                className="object-cover"
+                                                            />
+                                                        </div>
+                                                    ))}
+
+                                                    {(product.images?.length ?? 0) > 3 && (
+                                                        <div className="relative -ml-5 flex h-10 w-10 items-center justify-center rounded-full border-2 border-white bg-slate-100 text-xs font-semibold text-slate-600">
+                                                            +{(product.images?.length ?? 0) - 3}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </td>
+
                                             <td>
-                                                <span className="font-medium whitespace-nowrap">
+                                                <div className="font-medium whitespace-nowrap">
                                                     {product.name}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <div className="flex items-center">
-                                                    {product.brand?.name ?? "-"}
                                                 </div>
-                                            </td>
-                                            <td>
-                                                <div className="flex items-center">
-                                                    {product.category?.name ?? "-"}
+                                                <div className="text-slate-500 text-xs whitespace-nowrap mt-0.5">
+                                                    SKU : {product.sku}
                                                 </div>
                                             </td>
 
-                                            <td className="whitespace-nowrap px-3 py-4 text-slate-600">
-                                                {variantCount} variants
-                                                <span className="ml-1 text-xs text-slate-400">
-                                                    / {totalStock} stock
-                                                </span>
+                                            <td className="text-center">
+                                                {product.brand?.name ?? "-"}
+                                            </td>
+                                            <td className="text-center">
+                                                {product.category?.name ?? "-"}
                                             </td>
 
-                                            <td>
-                                                <div className="flex items-center">
-                                                    {formatRupiah(product.price)}
-                                                </div>
+                                            <td className="text-center">
+                                                {formatRupiah(product.price)}
                                             </td>
 
-                                            <td className="whitespace-nowrap px-3 py-4">
-                                                <span
-                                                    className={`rounded-full px-3 py-1 text-xs font-medium ${isActive
-                                                        ? "bg-success/20 text-success"
-                                                        : "bg-slate-200 text-slate-500"
-                                                        }`}
-                                                >
-                                                    {product.status ?? "active"}
-                                                </span>
+                                            <td className="w-40">
+                                                {isActive ? (
+                                                    <div className="flex items-center justify-center text-primary">
+                                                        <CheckSquare className="mr-2 h-4 w-4" />
+                                                        Active
+                                                    </div>
+                                                ) : (
+                                                    <div className="flex items-center justify-center text-danger">
+                                                        <CheckSquare className="mr-2 h-4 w-4" />
+                                                        Inactive
+                                                    </div>
+                                                )}
                                             </td>
 
                                             <td className="table-report__action w-56">
                                                 <div className="flex justify-center items-center">
-                                                    <button type="button" onClick={() => openEditProductModal(product)}
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => openDetailModal(product)}
+                                                        className="flex items-center mr-3 text-success"
+                                                        title="Detail"
+                                                    >
+                                                        <Eye className="w-4 h-4 mr-1" />
+                                                        Detail
+                                                    </button>
+                                                    <Link
+                                                        href={`/dashboard/products/${product.slug}/edit`}
                                                         className="flex items-center mr-3 "
                                                     >
                                                         <CheckSquare className="w-4 h-4 mr-1" /> Edit
-                                                    </button>
+                                                    </Link>
                                                     <button type="button" onClick={() => openModalDelete(product)}
                                                         className="flex items-center mr-3 text-red-500"
                                                     >
@@ -269,30 +299,21 @@ export default function ProductsPage() {
                 </div>
             </div >
 
-
-
-            {/* <Modal
-                isOpen={isOpen}
-                onClose={() => setIsOpen(false)}
-                title={modalData.title}
-                onSave={handleSaveProduct}
-                isLoading={saving}
+            <DetailModal
+                isOpen={isOpenDetail}
+                onClose={() => setIsOpenDetail(false)}
+                title="Product details"
+                hideSave
             >
-                <InputProduct
-                    formData={formData}
-                    setFormData={setFormData}
-                    errors={errors}
-                    setErrors={setErrors}
-                />
-            </Modal>
+                {selectedProduct && <ProductDetail product={selectedProduct} />}
+            </DetailModal>
 
             <ModalDelete
                 isOpenDelete={isOpenDelete}
                 onClose={() => setIsOpenDelete(false)}
                 onDelete={handleDeleteProduct}
                 title={modalDataDelete.title}
-                isLoading={deleting}
-            /> */}
+            />
         </>
     );
 }

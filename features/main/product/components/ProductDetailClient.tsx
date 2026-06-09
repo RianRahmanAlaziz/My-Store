@@ -13,6 +13,7 @@ import {
     Truck,
     Loader2,
 } from "lucide-react";
+import Image from "next/image";
 import { motion } from "motion/react";
 import { Button } from "@/components/main/ui/Button";
 import { Badge } from "@/components/main/ui/Badge";
@@ -20,6 +21,7 @@ import { toast } from "react-toastify";
 import { addToCart } from "@/features/main/cart/services/cartService";
 import { useCartStore } from "@/features/main/cart/stores/useCartStore";
 import { useAuth } from "@/app/contexts/AuthContext";
+import { getImageUrl } from "@/lib/image";
 
 
 export type ProductDetailItem = {
@@ -164,10 +166,13 @@ export default function ProductDetailClient({ product }: { product: ProductDetai
                             animate={{ opacity: 1 }}
                             className="relative aspect-square bg-[var(--secondary)]"
                         >
-                            <img
-                                src={images[selectedImage]}
+                            <Image
+                                src={getImageUrl(images[selectedImage])}
                                 alt={product.name}
-                                className="h-full w-full object-cover"
+                                fill
+                                priority
+                                sizes="(max-width: 1024px) 100vw, 50vw"
+                                className="object-cover"
                             />
                         </motion.div>
                     </div>
@@ -177,15 +182,17 @@ export default function ProductDetailClient({ product }: { product: ProductDetai
                             <button
                                 key={idx}
                                 onClick={() => setSelectedImage(idx)}
-                                className={`aspect-square overflow-hidden rounded-2xl border-2 transition ${selectedImage === idx
+                                className={`relative aspect-square overflow-hidden rounded-2xl border-2 transition ${selectedImage === idx
                                     ? "border-[var(--accent)]"
                                     : "border-transparent hover:border-[var(--border)]"
                                     }`}
                             >
-                                <img
-                                    src={img}
+                                <Image
+                                    src={getImageUrl(img)}
                                     alt={`${product.name} ${idx + 1}`}
-                                    className="h-full w-full object-cover"
+                                    fill
+                                    sizes="25vw"
+                                    className="object-cover"
                                 />
                             </button>
                         ))}
@@ -251,26 +258,6 @@ export default function ProductDetailClient({ product }: { product: ProductDetai
                     <p className="mt-6 leading-8 text-[var(--muted)]">
                         {product.description}
                     </p>
-
-                    {product.features && (
-                        <div className="mt-8">
-                            <h3 className="mb-3 font-bold text-[var(--foreground)]">
-                                Key Features
-                            </h3>
-
-                            <ul className="space-y-2">
-                                {product.features.map((feature, idx) => (
-                                    <li
-                                        key={idx}
-                                        className="flex items-start gap-2 text-[var(--muted)]"
-                                    >
-                                        <span className="mt-2 h-1.5 w-1.5 rounded-full bg-[var(--accent)]" />
-                                        {feature}
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
 
                     <div className="mt-8">
                         <h3 className="mb-3 font-bold text-[var(--foreground)]">
