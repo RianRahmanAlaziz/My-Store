@@ -1,55 +1,46 @@
-"use client";
+import type {
+    CategoryFormData,
+    FieldErrors,
+} from "../types/category";
+import { generateSlug } from "../utils/generateSlug";
 
-import { useState } from "react";
-
-type FormDataCategories = {
-    name: string;
-    slug: string;
-};
-
-type FieldErrors = Partial<Record<keyof FormDataCategories, string[]>>;
-
-type InputCategoriesProps = {
-    formData: FormDataCategories;
-    setFormData: React.Dispatch<React.SetStateAction<FormDataCategories>>;
+type Props = {
+    formData: CategoryFormData;
+    setFormData: React.Dispatch<React.SetStateAction<CategoryFormData>>;
     errors: FieldErrors;
     setErrors: React.Dispatch<React.SetStateAction<FieldErrors>>;
 };
 
-export default function InputCategories({
+export default function CategoryForm({
     formData,
     setFormData,
     errors,
     setErrors,
-}: InputCategoriesProps) {
-
-    const [loading, setLoading] = useState<boolean>(true);
-
-    function generateSlug(text: string) {
-        return text
-            .toLowerCase()
-            .trim()
-            .replace(/[^a-z0-9\s-]/g, "")
-            .replace(/\s+/g, "-")
-            .replace(/-+/g, "-");
-    }
-
-    const clearError = (field: keyof FormDataCategories) => {
-        if (errors?.[field]) {
-            setErrors((prev) => ({ ...prev, [field]: undefined }));
+}: Props) {
+    const clearError = (field: keyof CategoryFormData) => {
+        if (errors[field]) {
+            setErrors((prev) => ({
+                ...prev,
+                [field]: undefined,
+            }));
         }
     };
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const handleInputChange = (
+        e: React.ChangeEvent<HTMLInputElement>
+    ) => {
         const { name, value } = e.target;
+        const field = name as keyof CategoryFormData;
 
         setFormData((prev) => ({
             ...prev,
-            [name]: value,
-            ...(name === "name" ? { slug: generateSlug(value) } : {}),
+            [field]: value,
+            ...(field === "name"
+                ? { slug: generateSlug(value) }
+                : {}),
         }));
 
-        clearError(name as keyof FormDataCategories);
+        clearError(field);
     };
 
     return (
@@ -69,8 +60,13 @@ export default function InputCategories({
                     required
                     autoFocus
                 />
-                {errors?.name?.[0] && <small className="text-danger">{errors.name[0]}</small>}
+                {errors.name?.[0] && (
+                    <small className="text-danger">
+                        {errors.name[0]}
+                    </small>
+                )}
             </div>
+
             <div className="col-span-6 sm:col-span-12">
                 <label htmlFor="slug" className="form-label">
                     Slug
@@ -80,14 +76,16 @@ export default function InputCategories({
                     type="text"
                     name="slug"
                     value={formData.slug}
-                    onChange={handleInputChange}
                     className="form-control"
                     placeholder="slug"
                     readOnly
                 />
-                {errors?.slug && <small className="text-danger">{errors.slug[0]}</small>}
+                {errors.slug?.[0] && (
+                    <small className="text-danger">
+                        {errors.slug[0]}
+                    </small>
+                )}
             </div>
-
         </>
-    )
+    );
 }

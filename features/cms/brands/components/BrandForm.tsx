@@ -1,57 +1,42 @@
-"use client";
+import type { BrandFormData, FieldErrors } from "../types/brand";
+import { generateSlug } from "../utils/generateSlug";
 
-import { useState } from "react";
-
-type FormDataBrands = {
-    name: string;
-    slug: string;
-};
-
-type FieldErrors = Partial<Record<keyof FormDataBrands, string[]>>;
-
-type InputBrandsProps = {
-    formData: FormDataBrands;
-    setFormData: React.Dispatch<React.SetStateAction<FormDataBrands>>;
+type Props = {
+    formData: BrandFormData;
+    setFormData: React.Dispatch<React.SetStateAction<BrandFormData>>;
     errors: FieldErrors;
     setErrors: React.Dispatch<React.SetStateAction<FieldErrors>>;
 };
 
-export default function InputBrands({
+export default function BrandForm({
     formData,
     setFormData,
     errors,
     setErrors,
-}: InputBrandsProps) {
-
-    const [loading, setLoading] = useState<boolean>(true);
-
-    function generateSlug(text: string) {
-        return text
-            .toLowerCase()
-            .trim()
-            .replace(/[^a-z0-9\s-]/g, "")
-            .replace(/\s+/g, "-")
-            .replace(/-+/g, "-");
-    }
-
-    const clearError = (field: keyof FormDataBrands) => {
-        if (errors?.[field]) {
-            setErrors((prev) => ({ ...prev, [field]: undefined }));
+}: Props) {
+    const clearError = (field: keyof BrandFormData) => {
+        if (errors[field]) {
+            setErrors((prev) => ({
+                ...prev,
+                [field]: undefined,
+            }));
         }
     };
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const handleInputChange = (
+        e: React.ChangeEvent<HTMLInputElement>
+    ) => {
         const { name, value } = e.target;
+        const field = name as keyof BrandFormData;
 
         setFormData((prev) => ({
             ...prev,
-            [name]: value,
-            ...(name === "name" ? { slug: generateSlug(value) } : {}),
+            [field]: value,
+            ...(field === "name" ? { slug: generateSlug(value) } : {}),
         }));
 
-        clearError(name as keyof FormDataBrands);
+        clearError(field);
     };
-
 
     return (
         <>
@@ -70,8 +55,11 @@ export default function InputBrands({
                     required
                     autoFocus
                 />
-                {errors?.name?.[0] && <small className="text-danger">{errors.name[0]}</small>}
+                {errors.name?.[0] && (
+                    <small className="text-danger">{errors.name[0]}</small>
+                )}
             </div>
+
             <div className="col-span-6 sm:col-span-12">
                 <label htmlFor="slug" className="form-label">
                     Slug
@@ -81,14 +69,14 @@ export default function InputBrands({
                     type="text"
                     name="slug"
                     value={formData.slug}
-                    onChange={handleInputChange}
                     className="form-control"
                     placeholder="slug"
                     readOnly
                 />
-                {errors?.slug && <small className="text-danger">{errors.slug[0]}</small>}
+                {errors.slug?.[0] && (
+                    <small className="text-danger">{errors.slug[0]}</small>
+                )}
             </div>
-
         </>
-    )
+    );
 }
